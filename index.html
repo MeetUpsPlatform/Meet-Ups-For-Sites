@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safe Soulmates – Upcoming Events</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sage: #73976C;
+    --charcoal: #5A5A5A;
+    --lime: #E5E577;
+    --purple: #8863A8;
+    --steel: #5D79B0;
+    --berry: #BC4367;
+    --bg: #f7f6f2;
+    --card-bg: #ffffff;
+    --text: #2a2a2a;
+    --muted: #6b6b6b;
+    --cambridge: #f7dde3; --cambridge-text: #7a3045;
+    --online: #d6eaf8;    --online-text: #1a5276;
+    --ely: #d5e8d4;       --ely-text: #2d6a2d;
+    --huntingdon: #e8daf5;--huntingdon-text: #5b3280;
+    --peterborough: #e0e0e0;--peterborough-text: #3a3a3a;
+    --stneots: #fdf3d0;   --stneots-text: #7a5c00;
+    --stives: #d6f0e0;    --stives-text: #1a6640;
+    --march: #fde0db;     --march-text: #7a2010;
+    --ommt: #ffe0c0;      --ommt-text: #7a3800;
+    --external: #f0f0f0;  --external-text: #444;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header { background: var(--charcoal); padding: 2rem 2rem 1.5rem; text-align: center; }
+  header h1 { font-family: 'DM Serif Display', serif; color: var(--lime); font-size: 2rem; margin-bottom: 0.25rem; }
+  header p { color: #ccc; font-size: 0.95rem; }
+
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 1.25rem 1.5rem; background: white; border-bottom: 1px solid #e5e5e5; justify-content: center; }
+  .filter-btn { padding: 6px 14px; border-radius: 999px; border: 1.5px solid #ddd; background: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; color: var(--charcoal); }
+  .filter-btn:hover { border-color: var(--sage); color: var(--sage); }
+  .filter-btn.active { background: var(--charcoal); color: white; border-color: var(--charcoal); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding: 2rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+
+  .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; animation: fadeUp 0.4s ease both; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .card-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; display: block; }
+
+  .card-image-branded { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 1.5rem; text-align: center; position: relative; overflow: hidden; }
+  .card-image-branded .event-title-big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; line-height: 1.2; position: relative; z-index: 1; color: white; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
+  .card-image-branded .ss-logo-text { font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 0.5rem; position: relative; z-index: 1; }
+  .card-image-branded .event-emoji { font-size: 2rem; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+
+  .card-body { padding: 1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; gap: 0.5rem; }
+  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; }
+  .tag-cambridge   { background: var(--cambridge);    color: var(--cambridge-text); }
+  .tag-online      { background: var(--online);        color: var(--online-text); }
+  .tag-ely         { background: var(--ely);           color: var(--ely-text); }
+  .tag-huntingdon  { background: var(--huntingdon);    color: var(--huntingdon-text); }
+  .tag-peterborough{ background: var(--peterborough);  color: var(--peterborough-text); }
+  .tag-stneots     { background: var(--stneots);       color: var(--stneots-text); }
+  .tag-stives      { background: var(--stives);        color: var(--stives-text); }
+  .tag-march       { background: var(--march);         color: var(--march-text); }
+  .tag-ommt        { background: var(--ommt);          color: var(--ommt-text); }
+  .tag-external    { background: var(--external);      color: var(--external-text); }
+  .tag-category    { background: #f0f0f0; color: #444; }
+  .tag-daytrip     { background: #d6eaf8; color: #1a5276; }
+
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.15rem; line-height: 1.3; color: var(--text); }
+  .card-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.5; flex: 1; }
+  .card-meta { display: flex; gap: 1rem; font-size: 0.82rem; color: var(--charcoal); font-weight: 500; flex-wrap: wrap; margin-top: 0.25rem; }
+  .card-meta span { display: flex; align-items: center; gap: 4px; }
+
+  .external-notice { font-size: 0.78rem; color: var(--berry); font-weight: 600; background: #fdf0f3; padding: 6px 10px; border-radius: 8px; }
+
+  .book-btn { display: block; width: 100%; padding: 0.7rem; background: var(--sage); color: white; text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; border-radius: 10px; margin-top: 0.75rem; transition: background 0.15s ease; border: none; cursor: pointer; }
+  .book-btn:hover { background: #5a7854; }
+  .book-btn.external { background: var(--steel); }
+  .book-btn.external:hover { background: #4a6090; }
+  .book-btn.whatsapp { background: #25D366; }
+  .book-btn.whatsapp:hover { background: #1da851; }
+
+  .no-events { text-align: center; color: var(--muted); padding: 3rem; font-size: 1rem; grid-column: 1/-1; }
+
+  footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid #e5e5e5; margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>💛 Upcoming Events</h1>
+  <p>Safe Soulmates – fun, friendly, and accessible events for our community</p>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterEvents('all', this)">All Events</button>
+  <button class="filter-btn" onclick="filterEvents('cambridge', this)">Cambridge</button>
+  <button class="filter-btn" onclick="filterEvents('online', this)">Online</button>
+  <button class="filter-btn" onclick="filterEvents('stives', this)">St Ives</button>
+  <button class="filter-btn" onclick="filterEvents('daytrip', this)">Day Trips</button>
+  <button class="filter-btn" onclick="filterEvents('peterborough', this)">Peterborough</button>
+  <button class="filter-btn" onclick="filterEvents('huntingdon', this)">Huntingdon</button>
+  <button class="filter-btn" onclick="filterEvents('ely', this)">Ely</button>
+  <button class="filter-btn" onclick="filterEvents('stneots', this)">St Neots</button>
+  <button class="filter-btn" onclick="filterEvents('march', this)">March</button>
+</div>
+
+<div class="grid" id="eventGrid"></div>
+
+<footer>
+  Safe Soulmates CIC &bull; <a href="https://safesoulmates.org" style="color: var(--sage);">safesoulmates.org</a>
+</footer>
+
+<script>
+const LOCATION_COLORS = {
+  cambridge:    'linear-gradient(135deg, #c2566b, #8863A8)',
+  online:       'linear-gradient(135deg, #5D79B0, #73976C)',
+  ely:          'linear-gradient(135deg, #73976C, #5D79B0)',
+  huntingdon:   'linear-gradient(135deg, #8863A8, #BC4367)',
+  peterborough: 'linear-gradient(135deg, #7a7a7a, #5A5A5A)',
+  stneots:      'linear-gradient(135deg, #b89a2a, #73976C)',
+  stives:       'linear-gradient(135deg, #3a8a5a, #5D79B0)',
+  march:        'linear-gradient(135deg, #b84040, #8863A8)',
+  ommt:         'linear-gradient(135deg, #c46a10, #BC4367)',
+  daytrip:      'linear-gradient(135deg, #5D79B0, #73976C)',
+};
+
+const events = [
+  {
+    id: 1,
+    title: "The Science of AUDHD",
+    description: "A talk with Prof James Brown exploring how ADHD and Autism intersect — the hidden similarities and how to manage your symptoms effectively. Followed by Q&A. Book your own tickets and we can all sit together!",
+    date: "2026-06-15",
+    time: "18:00",
+    location: "cambridge",
+    category: "External Event",
+    type: "poster",
+    posterUrl: "poster-audhd.png",
+    bookingUrl: "https://www.cambridgejunction.co.uk",
+    bookingLabel: "Book Tickets (own booking) 🎟",
+    btnClass: "external",
+    externalNotice: "⚠️ Book your own tickets directly — we can still sit together!"
+  },
+  {
+    id: 2,
+    title: "Pub Lunch & Explore Cambridge",
+    description: "A lovely walk and pub lunch with Helen! Next stop: Cherry Hinton Hall (The Red Lion Pub). Future dates include The Chalk Pits, Jesus Green, Coe Fen, and more across Cambridge.",
+    date: "2026-06-23",
+    time: "12:00",
+    location: "cambridge",
+    category: "Walk",
+    type: "poster",
+    posterUrl: "poster-publunch.png",
+    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/MuseumAndAfeMeet",
+    bookingLabel: "Register to Join 🍺",
+    btnClass: ""
+  },
+  {
+    id: 3,
+    title: "UNBOUND – Out Out Club Night",
+    description: "A fantastic inclusive club night hosted by DJ Rob Bradshaw, Safe Soulmates, Inclusive Parties CIC, and Dance Ability! Great tunes, friendly faces, and a dancefloor full of energy. £5 tickets.",
+    date: "2026-07-17",
+    time: "19:00",
+    location: "stives",
+    category: "Club Night",
+    type: "poster",
+    posterUrl: "poster-unbound.png",
+    bookingUrl: "https://www.outout.club/",
+    bookingLabel: "Book Tickets – £5 🎉",
+    btnClass: "external"
+  },
+  {
+    id: 4,
+    title: "Beach Trip – Wells-by-the-Sea",
+    description: "A wonderful all-day trip to Wells-by-the-Sea! Lots to do to suit everyone — explore the town, walk the beach, enjoy the sea air. A brilliant day out with your Soulmates.",
+    date: "2026-07-22",
+    time: "All day",
+    location: "daytrip",
+    category: "Day Trip",
+    type: "poster",
+    posterUrl: "poster-beach.png",
+    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/BEACHTRIP",
+    bookingLabel: "Book Your Place 🏖",
+    btnClass: ""
+  },
+  {
+    id: 5,
+    title: "Group Outing – Zoo or Theme Park?",
+    description: "We're planning a big group outing and YOU get to choose! Vote for a theme park, zoo, or suggest something else entirely. This is your chance to pick the adventure!",
+    date: "2026-08-01",
+    time: "TBC",
+    location: "daytrip",
+    category: "Day Trip",
+    type: "branded",
+    emoji: "🎡",
+    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/GroupOuting",
+    bookingLabel: "Vote & Book Your Place 🗳",
+    btnClass: ""
+  },
+  {
+    id: 6,
+    title: "Minecraft Club",
+    description: "Volunteer Julia is helping us build our very own Safe Soulmates Minecraft server! Join the WhatsApp planning group to find out more and get involved. All levels welcome.",
+    date: "2026-06-20",
+    time: "TBC",
+    location: "online",
+    category: "Gaming",
+    type: "poster",
+    posterUrl: "poster-minecraft.png",
+    bookingUrl: "https://chat.whatsapp.com/CTCMpvODoc2JprQWpVQwI4",
+    bookingLabel: "Join WhatsApp Group 💬",
+    btnClass: "whatsapp"
+  }
+];
+
+let currentFilter = 'all';
+
+function formatDate(dateStr) {
+  if (dateStr === 'TBC') return 'Date TBC';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function buildCard(ev, index) {
+  const locKey = ev.location.toLowerCase();
+  const gradient = LOCATION_COLORS[locKey] || LOCATION_COLORS['cambridge'];
+
+  let imageHtml = '';
+  if (ev.type === 'poster') {
+    imageHtml = `<img class="card-image" src="${ev.posterUrl}" alt="${ev.title} poster" loading="lazy">`;
+  } else {
+    imageHtml = `
+      <div class="card-image-branded" style="background: ${gradient};">
+        <div class="ss-logo-text">Safe Soulmates</div>
+        ${ev.emoji ? `<div class="event-emoji">${ev.emoji}</div>` : ''}
+        <div class="event-title-big">${ev.title}</div>
+      </div>`;
+  }
+
+  const locationLabel = {
+    cambridge: 'Cambridge', online: 'Online', ely: 'Ely',
+    huntingdon: 'Huntingdon', peterborough: 'Peterborough',
+    stneots: 'St Neots', stives: 'St Ives', march: 'March',
+    ommt: 'Oliver McGowan', daytrip: 'Day Trip'
+  }[locKey] || locKey;
+
+  const timeDisplay = ev.time === 'TBC' ? 'Time TBC' : ev.time;
+
+  return `
+    <div class="card" data-location="${locKey}" style="animation-delay: ${index * 0.07}s">
+      ${imageHtml}
+      <div class="card-body">
+        <div class="card-tags">
+          <span class="tag tag-${locKey}">${locationLabel}</span>
+          ${ev.category ? `<span class="tag tag-category">${ev.category}</span>` : ''}
+        </div>
+        <div class="card-title">${ev.title}</div>
+        <div class="card-desc">${ev.description}</div>
+        ${ev.externalNotice ? `<div class="external-notice">${ev.externalNotice}</div>` : ''}
+        <div class="card-meta">
+          <span>📅 ${formatDate(ev.date)}</span>
+          <span>🕐 ${timeDisplay}</span>
+        </div>
+        <a class="book-btn ${ev.btnClass || ''}" href="${ev.bookingUrl}" target="_blank" rel="noopener">${ev.bookingLabel || 'Book a Place 🎟'}</a>
+      </div>
+    </div>`;
+}
+
+function filterEvents(location, btn) {
+  currentFilter = location;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderGrid(location);
+}
+
+function renderGrid(filter) {
+  const grid = document.getElementById('eventGrid');
+  const today = new Date();
+  today.setHours(0,0,0,0);
+
+  const filtered = events.filter(ev => {
+    if (ev.date !== 'TBC') {
+      const evDate = new Date(ev.date + 'T00:00:00');
+      if (evDate < today) return false;
+    }
+    if (filter === 'all') return true;
+    return ev.location.toLowerCase() === filter;
+  });
+
+  filtered.sort((a, b) => {
+    if (a.date === 'TBC') return 1;
+    if (b.date === 'TBC') return -1;
+    return new Date(a.date) - new Date(b.date);
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p class="no-events">No upcoming events found for this location. Check back soon! 💛</p>';
+  } else {
+    grid.innerHTML = filtered.map((ev, i) => buildCard(ev, i)).join('');
+  }
+}
+
+renderGrid('all');
+</script>
+</body>
+</html>
