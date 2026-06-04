@@ -4,306 +4,709 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Safe Soulmates – Upcoming Events</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --sage: #73976C;
-    --charcoal: #5A5A5A;
-    --lime: #E5E577;
-    --purple: #8863A8;
-    --steel: #5D79B0;
-    --berry: #BC4367;
-    --bg: #f7f6f2;
-    --card-bg: #ffffff;
-    --text: #2a2a2a;
-    --muted: #6b6b6b;
-    --cambridge: #f7dde3; --cambridge-text: #7a3045;
-    --online: #d6eaf8;    --online-text: #1a5276;
-    --ely: #d5e8d4;       --ely-text: #2d6a2d;
-    --huntingdon: #e8daf5;--huntingdon-text: #5b3280;
-    --peterborough: #e0e0e0;--peterborough-text: #3a3a3a;
-    --stneots: #fdf3d0;   --stneots-text: #7a5c00;
-    --stives: #d6f0e0;    --stives-text: #1a6640;
-    --march: #fde0db;     --march-text: #7a2010;
-    --ommt: #ffe0c0;      --ommt-text: #7a3800;
-    --external: #f0f0f0;  --external-text: #444;
+    --sage:    #73976C;
+    --sage-light: #9ab894;
+    --charcoal:#5A5A5A;
+    --lime:    #E5E577;
+    --purple:  #8863A8;
+    --blue:    #5D79B0;
+    --berry:   #BC4367;
+    --bg:      #141414;
+    --bg2:     #1e1e1e;
+    --bg3:     #272727;
+    --border:  rgba(255,255,255,.08);
+    --text:    #f0ede8;
+    --text-muted: rgba(240,237,232,.55);
+
+    /* location colours */
+    --col-cambridge:   #F2D9DC;
+    --col-online:      #D9E3F2;
+    --col-ely:         #D6EDD9;
+    --col-huntingdon:  #E8DCEF;
+    --col-peterborough:#E0E0E0;
+    --col-st-neots:    #FDFAD5;
+    --col-st-ives:     #D6EFE8;
+    --col-march:       #FFE0C8;
+    --col-default:     #e0e0e0;
+
+    --font-size-base: 1rem;
+    --radius: 18px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  header { background: var(--charcoal); padding: 2rem 2rem 1.5rem; text-align: center; }
-  header h1 { font-family: 'DM Serif Display', serif; color: var(--lime); font-size: 2rem; margin-bottom: 0.25rem; }
-  header p { color: #ccc; font-size: 0.95rem; }
+  /* ── LARGE PRINT MODE ── */
+  body.large-print { --font-size-base: 1.28rem; }
+  body.large-print .card-title { font-size: 1.5rem !important; }
+  body.large-print .card-desc  { font-size: 1.1rem !important; }
+  body.large-print .tag        { font-size: .9rem !important; }
+  body.large-print .filter-btn { font-size: 1rem !important; }
 
-  .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 1.25rem 1.5rem; background: white; border-bottom: 1px solid #e5e5e5; justify-content: center; }
-  .filter-btn { padding: 6px 14px; border-radius: 999px; border: 1.5px solid #ddd; background: white; font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; transition: all 0.15s ease; color: var(--charcoal); }
-  .filter-btn:hover { border-color: var(--sage); color: var(--sage); }
-  .filter-btn.active { background: var(--charcoal); color: white; border-color: var(--charcoal); }
+  /* ── HIGH CONTRAST MODE ── */
+  body.high-contrast {
+    --bg: #000; --bg2: #111; --bg3: #1a1a1a;
+    --text: #ffffff; --text-muted: #cccccc;
+    --border: rgba(255,255,255,.3);
+  }
+  body.high-contrast .card { border: 2px solid rgba(255,255,255,.4) !important; }
+  body.high-contrast .filter-btn.active { outline: 3px solid #fff; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; padding: 2rem 1.5rem; max-width: 1200px; margin: 0 auto; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .card { background: var(--card-bg); border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); transition: transform 0.2s ease, box-shadow 0.2s ease; display: flex; flex-direction: column; animation: fadeUp 0.4s ease both; }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-size: var(--font-size-base);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: font-size .2s;
+  }
 
-  .card-image { width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; display: block; }
+  /* ── ACCESSIBILITY BAR ── */
+  .a11y-bar {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .a11y-label {
+    font-size: .78rem;
+    color: var(--text-muted);
+    margin-right: 4px;
+  }
+  .a11y-btn {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-size: .8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .18s, border-color .18s;
+  }
+  .a11y-btn:hover { background: var(--bg3); border-color: var(--sage); }
+  .a11y-btn.active { background: var(--sage); border-color: var(--sage); color: #fff; }
+  .a11y-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 
-  .card-image-branded { width: 100%; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 1.5rem; text-align: center; position: relative; overflow: hidden; }
-  .card-image-branded .event-title-big { font-family: 'DM Serif Display', serif; font-size: 1.4rem; line-height: 1.2; position: relative; z-index: 1; color: white; text-shadow: 0 1px 4px rgba(0,0,0,0.35); }
-  .card-image-branded .ss-logo-text { font-size: 0.7rem; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 0.5rem; position: relative; z-index: 1; }
-  .card-image-branded .event-emoji { font-size: 2rem; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+  /* ── HERO ── */
+  .hero {
+    padding: 52px 20px 44px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(115,151,108,.12) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 30%, rgba(93,121,176,.10) 0%, transparent 50%);
+  }
+  .hero-icon { font-size: 2.6rem; display: block; margin-bottom: 14px; position: relative; }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--text);
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .hero h1 span { color: var(--sage-light); }
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.65;
+    position: relative;
+  }
 
-  .card-body { padding: 1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; gap: 0.5rem; }
-  .card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px; text-transform: uppercase; }
-  .tag-cambridge   { background: var(--cambridge);    color: var(--cambridge-text); }
-  .tag-online      { background: var(--online);        color: var(--online-text); }
-  .tag-ely         { background: var(--ely);           color: var(--ely-text); }
-  .tag-huntingdon  { background: var(--huntingdon);    color: var(--huntingdon-text); }
-  .tag-peterborough{ background: var(--peterborough);  color: var(--peterborough-text); }
-  .tag-stneots     { background: var(--stneots);       color: var(--stneots-text); }
-  .tag-stives      { background: var(--stives);        color: var(--stives-text); }
-  .tag-march       { background: var(--march);         color: var(--march-text); }
-  .tag-ommt        { background: var(--ommt);          color: var(--ommt-text); }
-  .tag-external    { background: var(--external);      color: var(--external-text); }
-  .tag-category    { background: #f0f0f0; color: #444; }
-  .tag-daytrip     { background: #d6eaf8; color: #1a5276; }
+  /* ── FILTER BAR ── */
+  .filter-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(20,20,20,.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+  }
+  .filter-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 2px;
+  }
+  .filter-scroll::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    border-radius: 30px;
+    padding: 8px 18px;
+    font-size: .88rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .18s;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .filter-btn:hover { border-color: var(--sage); color: var(--sage-light); }
+  .filter-btn.active {
+    background: var(--sage);
+    border-color: var(--sage);
+    color: #fff;
+    font-weight: 700;
+  }
+  .filter-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 
-  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.15rem; line-height: 1.3; color: var(--text); }
-  .card-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.5; flex: 1; }
-  .card-meta { display: flex; gap: 1rem; font-size: 0.82rem; color: var(--charcoal); font-weight: 500; flex-wrap: wrap; margin-top: 0.25rem; }
-  .card-meta span { display: flex; align-items: center; gap: 4px; }
+  /* colour dots on filter buttons */
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1.5px solid rgba(255,255,255,.2);
+  }
 
-  .external-notice { font-size: 0.78rem; color: var(--berry); font-weight: 600; background: #fdf0f3; padding: 6px 10px; border-radius: 8px; }
+  /* ── GRID ── */
+  .events-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 20px 60px;
+  }
 
-  .book-btn { display: block; width: 100%; padding: 0.7rem; background: var(--sage); color: white; text-align: center; text-decoration: none; font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.9rem; border-radius: 10px; margin-top: 0.75rem; transition: background 0.15s ease; border: none; cursor: pointer; }
-  .book-btn:hover { background: #5a7854; }
-  .book-btn.external { background: var(--steel); }
-  .book-btn.external:hover { background: #4a6090; }
-  .book-btn.whatsapp { background: #25D366; }
-  .book-btn.whatsapp:hover { background: #1da851; }
+  .events-count {
+    font-size: .88rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .events-count strong { color: var(--sage-light); }
 
-  .no-events { text-align: center; color: var(--muted); padding: 3rem; font-size: 1rem; grid-column: 1/-1; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 22px;
+  }
 
-  footer { text-align: center; padding: 2rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid #e5e5e5; margin-top: 1rem; }
+  /* ── CARD ── */
+  .card {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s;
+    animation: fadeUp .35s ease both;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,.4);
+    border-color: rgba(115,151,108,.35);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+  }
+  .card-img-placeholder {
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+  }
+
+  .card-body {
+    padding: 18px 20px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tag {
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: #222;
+  }
+  .tag.status-sold-out    { background: #e55; color: #fff; }
+  .tag.status-free        { background: var(--lime); }
+  .tag.status-booking     { background: var(--blue); color: #fff; }
+  .tag.status-new         { background: var(--berry); color: #fff; }
+  .tag.status-upcoming    { background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border); }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.18rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  .card-desc {
+    font-size: .9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+
+  /* accessibility info */
+  .card-access {
+    background: var(--bg3);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: .82rem;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .card-access-row { display: flex; align-items: flex-start; gap: 7px; }
+  .card-access-row span:first-child { flex-shrink: 0; }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: .85rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+  }
+  .card-meta-item { display: flex; align-items: center; gap: 5px; }
+
+  .card-footer {
+    padding: 0 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 13px 20px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .92rem;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: opacity .18s, transform .12s;
+  }
+  .btn:hover { opacity: .88; transform: translateY(-1px); }
+  .btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  .btn-primary { background: var(--sage); color: #fff; }
+  .btn-secondary { background: var(--bg3); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-listen {
+    background: transparent;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    font-size: .82rem;
+    padding: 8px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    justify-content: center;
+    transition: border-color .18s, color .18s;
+  }
+  .btn-listen:hover { border-color: var(--sage); color: var(--text); }
+  .btn-listen:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+  .empty h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 8px; }
+
+  /* ── LOADING ── */
+  .loading {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+    font-size: .95rem;
+  }
+  .spinner {
+    width: 36px; height: 36px;
+    border: 3px solid var(--border);
+    border-top-color: var(--sage);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+    margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: .85rem;
+    line-height: 1.6;
+  }
+  .footer a { color: var(--sage-light); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .grid { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.8rem; }
+    .a11y-bar { justify-content: flex-start; }
+  }
 </style>
 </head>
 <body>
 
-<header>
-  <h1>💛 Upcoming Events</h1>
-  <p>Safe Soulmates – fun, friendly, and accessible events for our community</p>
-</header>
-
-<div class="filter-bar">
-  <button class="filter-btn active" onclick="filterEvents('all', this)">All Events</button>
-  <button class="filter-btn" onclick="filterEvents('cambridge', this)">Cambridge</button>
-  <button class="filter-btn" onclick="filterEvents('online', this)">Online</button>
-  <button class="filter-btn" onclick="filterEvents('stives', this)">St Ives</button>
-  <button class="filter-btn" onclick="filterEvents('daytrip', this)">Day Trips</button>
-  <button class="filter-btn" onclick="filterEvents('peterborough', this)">Peterborough</button>
-  <button class="filter-btn" onclick="filterEvents('huntingdon', this)">Huntingdon</button>
-  <button class="filter-btn" onclick="filterEvents('ely', this)">Ely</button>
-  <button class="filter-btn" onclick="filterEvents('stneots', this)">St Neots</button>
-  <button class="filter-btn" onclick="filterEvents('march', this)">March</button>
+<!-- ACCESSIBILITY BAR -->
+<div class="a11y-bar" role="toolbar" aria-label="Accessibility options">
+  <span class="a11y-label">Accessibility:</span>
+  <button class="a11y-btn" id="btn-large-print" onclick="toggleLargePrint()" aria-pressed="false">
+    🔡 Large Print
+  </button>
+  <button class="a11y-btn" id="btn-contrast" onclick="toggleContrast()" aria-pressed="false">
+    ◑ High Contrast
+  </button>
 </div>
 
-<div class="grid" id="eventGrid"></div>
+<!-- HERO -->
+<header class="hero">
+  <span class="hero-icon" aria-hidden="true">🤝</span>
+  <h1>Upcoming <span>Events</span></h1>
+  <p>Safe Soulmates — fun, friendly, and accessible events for our community. Everyone is welcome.</p>
+</header>
 
-<footer>
-  Safe Soulmates CIC &bull; <a href="https://safesoulmates.org" style="color: var(--sage);">safesoulmates.org</a>
+<!-- FILTER BAR -->
+<nav class="filter-wrap" aria-label="Filter events by location">
+  <div class="filter-scroll" role="list">
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem">
+      🗓️ All Events
+    </button>
+    <button class="filter-btn" data-filter="Cambridge" onclick="setFilter('Cambridge')" role="listitem">
+      <span class="dot" style="background:#F2D9DC"></span> Cambridge
+    </button>
+    <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem">
+      <span class="dot" style="background:#E0E0E0"></span> Peterborough
+    </button>
+    <button class="filter-btn" data-filter="Online" onclick="setFilter('Online')" role="listitem">
+      <span class="dot" style="background:#D9E3F2"></span> Online
+    </button>
+    <button class="filter-btn" data-filter="Other Events of Interest" onclick="setFilter('Other Events of Interest')" role="listitem">
+      ✨ Other Events of Interest
+    </button>
+    <button class="filter-btn" data-filter="St Neots" onclick="setFilter('St Neots')" role="listitem">
+      <span class="dot" style="background:#FDFAD5"></span> St Neots
+    </button>
+    <button class="filter-btn" data-filter="Huntingdon" onclick="setFilter('Huntingdon')" role="listitem">
+      <span class="dot" style="background:#E8DCEF"></span> Huntingdon
+    </button>
+    <button class="filter-btn" data-filter="Ely" onclick="setFilter('Ely')" role="listitem">
+      <span class="dot" style="background:#D6EDD9"></span> Ely
+    </button>
+    <button class="filter-btn" data-filter="St Ives" onclick="setFilter('St Ives')" role="listitem">
+      <span class="dot" style="background:#D6EFE8"></span> St Ives
+    </button>
+    <button class="filter-btn" data-filter="Day Trips" onclick="setFilter('Day Trips')" role="listitem">
+      🚌 Day Trips
+    </button>
+    <button class="filter-btn" data-filter="March" onclick="setFilter('March')" role="listitem">
+      <span class="dot" style="background:#FFE0C8"></span> March
+    </button>
+  </div>
+</nav>
+
+<!-- EVENTS -->
+<main class="events-wrap">
+  <p class="events-count" id="events-count" aria-live="polite"></p>
+  <div class="grid" id="events-grid" role="list" aria-label="Events list">
+    <div class="loading">
+      <div class="spinner" aria-hidden="true"></div>
+      Loading events…
+    </div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Questions? Get in touch with the Safe Soulmates team. 💚</p>
+  <p style="margin-top:6px; font-size:.8rem;">Events update automatically from our events sheet.</p>
 </footer>
 
 <script>
-const LOCATION_COLORS = {
-  cambridge:    'linear-gradient(135deg, #c2566b, #8863A8)',
-  online:       'linear-gradient(135deg, #5D79B0, #73976C)',
-  ely:          'linear-gradient(135deg, #73976C, #5D79B0)',
-  huntingdon:   'linear-gradient(135deg, #8863A8, #BC4367)',
-  peterborough: 'linear-gradient(135deg, #7a7a7a, #5A5A5A)',
-  stneots:      'linear-gradient(135deg, #b89a2a, #73976C)',
-  stives:       'linear-gradient(135deg, #3a8a5a, #5D79B0)',
-  march:        'linear-gradient(135deg, #b84040, #8863A8)',
-  ommt:         'linear-gradient(135deg, #c46a10, #BC4367)',
-  daytrip:      'linear-gradient(135deg, #5D79B0, #73976C)',
-};
+  // ── CONFIG ──
+  // Replace SHEET_ID with your actual Google Sheet ID
+  const SHEET_ID = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
+  const SHEET_NAME = 'Sheet1';
 
-const events = [
-  {
-    id: 1,
-    title: "The Science of AUDHD",
-    description: "A talk with Prof James Brown exploring how ADHD and Autism intersect — the hidden similarities and how to manage your symptoms effectively. Followed by Q&A. Book your own tickets and we can all sit together!",
-    date: "2026-06-15",
-    time: "18:00",
-    location: "cambridge",
-    category: "External Event",
-    type: "poster",
-    posterUrl: "poster-audhd.png",
-    bookingUrl: "https://www.cambridgejunction.co.uk",
-    bookingLabel: "Book Tickets (own booking) 🎟",
-    btnClass: "external",
-    externalNotice: "⚠️ Book your own tickets directly — we can still sit together!"
-  },
-  {
-    id: 2,
-    title: "Pub Lunch & Explore Cambridge",
-    description: "A lovely walk and pub lunch with Helen! Next stop: Cherry Hinton Hall (The Red Lion Pub). Future dates include The Chalk Pits, Jesus Green, Coe Fen, and more across Cambridge.",
-    date: "2026-06-23",
-    time: "12:00",
-    location: "cambridge",
-    category: "Walk",
-    type: "poster",
-    posterUrl: "poster-publunch.png",
-    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/MuseumAndAfeMeet",
-    bookingLabel: "Register to Join 🍺",
-    btnClass: ""
-  },
-  {
-    id: 3,
-    title: "UNBOUND – Out Out Club Night",
-    description: "A fantastic inclusive club night hosted by DJ Rob Bradshaw, Safe Soulmates, Inclusive Parties CIC, and Dance Ability! Great tunes, friendly faces, and a dancefloor full of energy. £5 tickets.",
-    date: "2026-07-17",
-    time: "19:00",
-    location: "stives",
-    category: "Club Night",
-    type: "poster",
-    posterUrl: "poster-unbound.png",
-    bookingUrl: "https://www.outout.club/",
-    bookingLabel: "Book Tickets – £5 🎉",
-    btnClass: "external"
-  },
-  {
-    id: 4,
-    title: "Beach Trip – Wells-by-the-Sea",
-    description: "A wonderful all-day trip to Wells-by-the-Sea! Lots to do to suit everyone — explore the town, walk the beach, enjoy the sea air. A brilliant day out with your Soulmates.",
-    date: "2026-07-22",
-    time: "All day",
-    location: "daytrip",
-    category: "Day Trip",
-    type: "poster",
-    posterUrl: "poster-beach.png",
-    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/BEACHTRIP",
-    bookingLabel: "Book Your Place 🏖",
-    btnClass: ""
-  },
-  {
-    id: 5,
-    title: "Group Outing – Zoo or Theme Park?",
-    description: "We're planning a big group outing and YOU get to choose! Vote for a theme park, zoo, or suggest something else entirely. This is your chance to pick the adventure!",
-    date: "2026-08-01",
-    time: "TBC",
-    location: "daytrip",
-    category: "Day Trip",
-    type: "branded",
-    emoji: "🎡",
-    bookingUrl: "https://www.cognitoforms.com/SafeSoulmates2/GroupOuting",
-    bookingLabel: "Vote & Book Your Place 🗳",
-    btnClass: ""
-  },
-  {
-    id: 6,
-    title: "Minecraft Club",
-    description: "Volunteer Julia is helping us build our very own Safe Soulmates Minecraft server! Join the WhatsApp planning group to find out more and get involved. All levels welcome.",
-    date: "2026-06-20",
-    time: "TBC",
-    location: "online",
-    category: "Gaming",
-    type: "poster",
-    posterUrl: "poster-minecraft.png",
-    bookingUrl: "https://chat.whatsapp.com/CTCMpvODoc2JprQWpVQwI4",
-    bookingLabel: "Join WhatsApp Group 💬",
-    btnClass: "whatsapp"
-  }
-];
+  // ── LOCATION COLOURS ──
+  const locationColours = {
+    'cambridge':    '#F2D9DC',
+    'online':       '#D9E3F2',
+    'ely':          '#D6EDD9',
+    'huntingdon':   '#E8DCEF',
+    'peterborough': '#E0E0E0',
+    'st neots':     '#FDFAD5',
+    'st ives':      '#D6EFE8',
+    'march':        '#FFE0C8',
+    'day trips':    '#FFF3CD',
+  };
 
-let currentFilter = 'all';
+  const locationEmojis = {
+    'cambridge': '🌉', 'online': '💻', 'ely': '⛪',
+    'huntingdon': '🦌', 'peterborough': '🏛️', 'st neots': '🏘️',
+    'st ives': '🌿', 'march': '🕰️', 'day trips': '🚌',
+  };
 
-function formatDate(dateStr) {
-  if (dateStr === 'TBC') return 'Date TBC';
-  const d = new Date(dateStr + 'T00:00:00');
-  return d.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-}
+  // ── STATE ──
+  let allEvents = [];
+  let currentFilter = 'all';
 
-function buildCard(ev, index) {
-  const locKey = ev.location.toLowerCase();
-  const gradient = LOCATION_COLORS[locKey] || LOCATION_COLORS['cambridge'];
+  // ── FETCH FROM GOOGLE SHEETS ──
+  async function loadEvents() {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    try {
+      const res = await fetch(url);
+      const text = await res.text();
+      const json = JSON.parse(text.substring(47, text.length - 2));
+      const rows = json.table.rows;
+      const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
 
-  let imageHtml = '';
-  if (ev.type === 'poster') {
-    imageHtml = `<img class="card-image" src="${ev.posterUrl}" alt="${ev.title} poster" loading="lazy">`;
-  } else {
-    imageHtml = `
-      <div class="card-image-branded" style="background: ${gradient};">
-        <div class="ss-logo-text">Safe Soulmates</div>
-        ${ev.emoji ? `<div class="event-emoji">${ev.emoji}</div>` : ''}
-        <div class="event-title-big">${ev.title}</div>
-      </div>`;
-  }
+      allEvents = rows
+        .map(row => {
+          const obj = {};
+          cols.forEach((col, i) => {
+            const cell = row.c[i];
+            obj[col] = cell ? (cell.f || cell.v || '') : '';
+          });
+          return obj;
+        })
+        .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
 
-  const locationLabel = {
-    cambridge: 'Cambridge', online: 'Online', ely: 'Ely',
-    huntingdon: 'Huntingdon', peterborough: 'Peterborough',
-    stneots: 'St Neots', stives: 'St Ives', march: 'March',
-    ommt: 'Oliver McGowan', daytrip: 'Day Trip'
-  }[locKey] || locKey;
-
-  const timeDisplay = ev.time === 'TBC' ? 'Time TBC' : ev.time;
-
-  return `
-    <div class="card" data-location="${locKey}" style="animation-delay: ${index * 0.07}s">
-      ${imageHtml}
-      <div class="card-body">
-        <div class="card-tags">
-          <span class="tag tag-${locKey}">${locationLabel}</span>
-          ${ev.category ? `<span class="tag tag-category">${ev.category}</span>` : ''}
-        </div>
-        <div class="card-title">${ev.title}</div>
-        <div class="card-desc">${ev.description}</div>
-        ${ev.externalNotice ? `<div class="external-notice">${ev.externalNotice}</div>` : ''}
-        <div class="card-meta">
-          <span>📅 ${formatDate(ev.date)}</span>
-          <span>🕐 ${timeDisplay}</span>
-        </div>
-        <a class="book-btn ${ev.btnClass || ''}" href="${ev.bookingUrl}" target="_blank" rel="noopener">${ev.bookingLabel || 'Book a Place 🎟'}</a>
-      </div>
-    </div>`;
-}
-
-function filterEvents(location, btn) {
-  currentFilter = location;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderGrid(location);
-}
-
-function renderGrid(filter) {
-  const grid = document.getElementById('eventGrid');
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  const filtered = events.filter(ev => {
-    if (ev.date !== 'TBC') {
-      const evDate = new Date(ev.date + 'T00:00:00');
-      if (evDate < today) return false;
+      renderEvents();
+    } catch (err) {
+      document.getElementById('events-grid').innerHTML = `
+        <div class="empty">
+          <span class="empty-icon">⚠️</span>
+          <h3>Couldn't load events right now</h3>
+          <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
+        </div>`;
+      console.error(err);
     }
-    if (filter === 'all') return true;
-    return ev.location.toLowerCase() === filter;
-  });
-
-  filtered.sort((a, b) => {
-    if (a.date === 'TBC') return 1;
-    if (b.date === 'TBC') return -1;
-    return new Date(a.date) - new Date(b.date);
-  });
-
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p class="no-events">No upcoming events found for this location. Check back soon! 💛</p>';
-  } else {
-    grid.innerHTML = filtered.map((ev, i) => buildCard(ev, i)).join('');
   }
-}
 
-renderGrid('all');
+  // ── FILTER ──
+  function setFilter(filter) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.filter === filter);
+      b.setAttribute('aria-pressed', b.dataset.filter === filter);
+    });
+    renderEvents();
+  }
+
+  // ── RENDER ──
+  function renderEvents() {
+    const grid = document.getElementById('events-grid');
+    const countEl = document.getElementById('events-count');
+
+    let filtered = allEvents;
+    if (currentFilter !== 'all') {
+      filtered = allEvents.filter(e =>
+        (e['location'] || '').toLowerCase().includes(currentFilter.toLowerCase()) ||
+        (e['tags'] || '').toLowerCase().includes(currentFilter.toLowerCase())
+      );
+    }
+
+    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : ''}`;
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="empty">
+          <span class="empty-icon">🔍</span>
+          <h3>No events found</h3>
+          <p>There are no events in this area right now. Try a different filter or check back soon!</p>
+        </div>`;
+      return;
+    }
+
+    grid.innerHTML = filtered.map((e, i) => buildCard(e, i)).join('');
+  }
+
+  // ── BUILD CARD ──
+  function buildCard(e, i) {
+    const name        = e['event name'] || '';
+    const date        = e['date'] || '';
+    const time        = e['time'] || '';
+    const location    = e['location'] || '';
+    const description = e['description'] || '';
+    const tags        = e['tags'] || '';
+    const btnText     = e['button text'] || 'Find Out More';
+    const btnLink     = e['button link'] || '#';
+    const imageUrl    = e['image url'] || '';
+    const status      = (e['status'] || '').toString().trim();
+    const accessNotes = e['accessibility notes'] || '';
+    const sensory     = e['sensory info'] || '';
+    const transport   = e['transport info'] || '';
+    const cost        = e['cost'] || '';
+    const booking     = e['booking required'] || '';
+    const contact     = e['contact'] || '';
+
+    const locKey = location.toLowerCase();
+    const locColour = locationColours[locKey] || '#e0e0e0';
+    const locEmoji  = locationEmojis[locKey] || '📍';
+
+    // image or placeholder
+    const imgHtml = imageUrl
+      ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.parentNode.innerHTML=buildPlaceholder('${locColour}','${locEmoji}')">`
+      : `<div class="card-img-placeholder" style="background:${locColour}">${locEmoji}</div>`;
+
+    // location tag
+    const locTag = location
+      ? `<span class="tag" style="background:${locColour};color:#222">${location}</span>`
+      : '';
+
+    // extra tags
+    const extraTags = tags
+      ? tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text-muted);border:1px solid var(--border)">${t.trim()}</span>`).join('')
+      : '';
+
+    // status tag
+    const statusKey = status.toLowerCase().replace(/\s+/g, '-');
+    const statusTag = status
+      ? `<span class="tag status-${statusKey}">${status}</span>`
+      : '';
+
+    // cost tag
+    const costTag = cost
+      ? `<span class="tag" style="background:var(--lime);color:#222">${cost}</span>`
+      : '';
+
+    // accessibility block
+    const accessRows = [
+      accessNotes ? `<div class="card-access-row"><span>♿</span><span>${accessNotes}</span></div>` : '',
+      sensory     ? `<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>` : '',
+      transport   ? `<div class="card-access-row"><span>🚌</span><span>${transport}</span></div>` : '',
+      booking === 'Yes' ? `<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>` : '',
+      contact     ? `<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>` : '',
+    ].filter(Boolean).join('');
+
+    const accessBlock = accessRows
+      ? `<div class="card-access" aria-label="Accessibility information">${accessRows}</div>`
+      : '';
+
+    // date/time meta
+    const metaItems = [
+      date ? `<span class="card-meta-item">📅 ${date}</span>` : '',
+      time ? `<span class="card-meta-item">🕐 ${time}</span>` : '',
+    ].filter(Boolean).join('');
+
+    const metaHtml = metaItems ? `<div class="card-meta">${metaItems}</div>` : '';
+
+    // listen text (for TTS)
+    const listenText = `${name}. ${date ? 'Date: ' + date + '.' : ''} ${time ? 'Time: ' + time + '.' : ''} ${location ? 'Location: ' + location + '.' : ''} ${description} ${accessNotes ? 'Accessibility: ' + accessNotes : ''}`.replace(/"/g, '&quot;');
+
+    const delay = Math.min(i * 0.05, 0.4);
+
+    return `
+      <article class="card" role="listitem" style="animation-delay:${delay}s" aria-label="${name}">
+        ${imgHtml}
+        <div class="card-body">
+          <div class="tags">
+            ${locTag}${extraTags}${statusTag}${costTag}
+          </div>
+          <h2 class="card-title">${name}</h2>
+          ${description ? `<p class="card-desc">${description}</p>` : ''}
+          ${accessBlock}
+          ${metaHtml}
+        </div>
+        <div class="card-footer">
+          ${btnLink && btnLink !== '#'
+            ? `<a href="${btnLink}" class="btn btn-primary" target="_blank" rel="noopener">${btnText}</a>`
+            : `<button class="btn btn-secondary" disabled>${btnText}</button>`}
+          <button class="btn-listen" onclick="speakEvent(\`${listenText}\`)" aria-label="Listen to event details for ${name}">
+            🔊 Listen to this event
+          </button>
+        </div>
+      </article>`;
+  }
+
+  // ── TEXT TO SPEECH ──
+  let currentUtterance = null;
+  function speakEvent(text) {
+    if (currentUtterance) {
+      window.speechSynthesis.cancel();
+      currentUtterance = null;
+      return;
+    }
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.9;
+    utter.pitch = 1;
+    utter.onend = () => { currentUtterance = null; };
+    currentUtterance = utter;
+    window.speechSynthesis.speak(utter);
+  }
+
+  // ── LARGE PRINT ──
+  function toggleLargePrint() {
+    const btn = document.getElementById('btn-large-print');
+    document.body.classList.toggle('large-print');
+    const on = document.body.classList.contains('large-print');
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on);
+  }
+
+  // ── HIGH CONTRAST ──
+  function toggleContrast() {
+    const btn = document.getElementById('btn-contrast');
+    document.body.classList.toggle('high-contrast');
+    const on = document.body.classList.contains('high-contrast');
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-pressed', on);
+  }
+
+  // ── INIT ──
+  loadEvents();
 </script>
 </body>
 </html>
