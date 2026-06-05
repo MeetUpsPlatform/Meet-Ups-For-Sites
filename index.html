@@ -20,8 +20,6 @@
     --border:  rgba(255,255,255,.08);
     --text:    #f0ede8;
     --text-muted: rgba(240,237,232,.55);
-
-    /* location colours */
     --col-cambridge:   #F2D9DC;
     --col-online:      #D9E3F2;
     --col-ely:         #D6EDD9;
@@ -31,19 +29,16 @@
     --col-st-ives:     #D6EFE8;
     --col-march:       #FFE0C8;
     --col-default:     #e0e0e0;
-
     --font-size-base: 1rem;
     --radius: 18px;
   }
 
-  /* ── LARGE PRINT MODE ── */
   body.large-print { --font-size-base: 1.28rem; }
   body.large-print .card-title { font-size: 1.5rem !important; }
   body.large-print .card-desc  { font-size: 1.1rem !important; }
   body.large-print .tag        { font-size: .9rem !important; }
   body.large-print .filter-btn { font-size: 1rem !important; }
 
-  /* ── HIGH CONTRAST MODE ── */
   body.high-contrast {
     --bg: #000; --bg2: #111; --bg3: #1a1a1a;
     --text: #ffffff; --text-muted: #cccccc;
@@ -63,7 +58,7 @@
     transition: font-size .2s;
   }
 
-  /* ── ACCESSIBILITY BAR ── */
+  /* ACCESSIBILITY BAR */
   .a11y-bar {
     background: var(--bg2);
     border-bottom: 1px solid var(--border);
@@ -74,11 +69,7 @@
     flex-wrap: wrap;
     justify-content: flex-end;
   }
-  .a11y-label {
-    font-size: .78rem;
-    color: var(--text-muted);
-    margin-right: 4px;
-  }
+  .a11y-label { font-size: .78rem; color: var(--text-muted); margin-right: 4px; }
   .a11y-btn {
     background: var(--bg3);
     border: 1px solid var(--border);
@@ -97,40 +88,53 @@
   .a11y-btn.active { background: var(--sage); border-color: var(--sage); color: #fff; }
   .a11y-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 
-  /* ── HERO ── */
+  /* HERO — photo version */
   .hero {
-    padding: 52px 20px 44px;
-    text-align: center;
     position: relative;
+    width: 100%;
+    height: 340px;
     overflow: hidden;
   }
-  .hero::before {
-    content: '';
+  .hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    display: block;
+  }
+  .hero-overlay {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(ellipse at 20% 50%, rgba(115,151,108,.12) 0%, transparent 55%),
-      radial-gradient(ellipse at 80% 30%, rgba(93,121,176,.10) 0%, transparent 50%);
+    background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.65) 100%);
   }
-  .hero-icon { font-size: 2.6rem; display: block; margin-bottom: 14px; position: relative; }
-  .hero h1 {
+  .hero-text {
+    position: absolute;
+    bottom: 2.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 90%;
+    z-index: 2;
+  }
+  .hero-text h1 {
     font-family: 'DM Serif Display', serif;
     font-size: clamp(2rem, 5vw, 3.2rem);
-    color: var(--text);
-    margin-bottom: 12px;
-    position: relative;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.5);
+    margin-bottom: 0.5rem;
   }
-  .hero h1 span { color: var(--sage-light); }
-  .hero p {
-    color: var(--text-muted);
+  .hero-text h1 span { color: var(--lime); }
+  .hero-text p {
+    color: rgba(255,255,255,0.88);
     font-size: 1.05rem;
-    max-width: 520px;
-    margin: 0 auto;
+    background: rgba(0,0,0,0.3);
+    display: inline-block;
+    padding: 5px 16px;
+    border-radius: 999px;
     line-height: 1.65;
-    position: relative;
   }
 
-  /* ── FILTER BAR ── */
+  /* FILTER BAR */
   .filter-wrap {
     position: sticky;
     top: 0;
@@ -169,43 +173,17 @@
     gap: 6px;
   }
   .filter-btn:hover { border-color: var(--sage); color: var(--sage-light); }
-  .filter-btn.active {
-    background: var(--sage);
-    border-color: var(--sage);
-    color: #fff;
-    font-weight: 700;
-  }
+  .filter-btn.active { background: var(--sage); border-color: var(--sage); color: #fff; font-weight: 700; }
   .filter-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1.5px solid rgba(255,255,255,.2); }
 
-  /* colour dots on filter buttons */
-  .dot {
-    width: 9px; height: 9px;
-    border-radius: 50%;
-    display: inline-block;
-    border: 1.5px solid rgba(255,255,255,.2);
-  }
-
-  /* ── GRID ── */
-  .events-wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 32px 20px 60px;
-  }
-
-  .events-count {
-    font-size: .88rem;
-    color: var(--text-muted);
-    margin-bottom: 20px;
-  }
+  /* GRID */
+  .events-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 20px 60px; }
+  .events-count { font-size: .88rem; color: var(--text-muted); margin-bottom: 20px; }
   .events-count strong { color: var(--sage-light); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
 
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 22px;
-  }
-
-  /* ── CARD ── */
+  /* CARD */
   .card {
     background: var(--bg2);
     border: 1.5px solid var(--border);
@@ -216,184 +194,56 @@
     transition: transform .22s ease, box-shadow .22s ease, border-color .22s;
     animation: fadeUp .35s ease both;
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,.4);
-    border-color: rgba(115,151,108,.35);
-  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.4); border-color: rgba(115,151,108,.35); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  .card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
+  .card-img-placeholder { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
+  .card-body { padding: 18px 20px 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
-  .card-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    display: block;
-  }
-  .card-img-placeholder {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3.5rem;
-  }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag { font-size: .75rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; color: #222; }
+  .tag.status-sold-out { background: #e55; color: #fff; }
+  .tag.status-free     { background: var(--lime); }
+  .tag.status-booking  { background: var(--blue); color: #fff; }
+  .tag.status-new      { background: var(--berry); color: #fff; }
+  .tag.status-upcoming { background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border); }
 
-  .card-body {
-    padding: 18px 20px 20px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+  .card-title { font-family: 'DM Serif Display', serif; font-size: 1.18rem; color: var(--text); line-height: 1.3; }
+  .card-desc  { font-size: .9rem; color: var(--text-muted); line-height: 1.6; flex: 1; }
 
-  .tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .tag {
-    font-size: .75rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    padding: 4px 10px;
-    border-radius: 20px;
-    color: #222;
-  }
-  .tag.status-sold-out    { background: #e55; color: #fff; }
-  .tag.status-free        { background: var(--lime); }
-  .tag.status-booking     { background: var(--blue); color: #fff; }
-  .tag.status-new         { background: var(--berry); color: #fff; }
-  .tag.status-upcoming    { background: var(--bg3); color: var(--text-muted); border: 1px solid var(--border); }
-
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.18rem;
-    color: var(--text);
-    line-height: 1.3;
-  }
-
-  .card-desc {
-    font-size: .9rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    flex: 1;
-  }
-
-  /* accessibility info */
-  .card-access {
-    background: var(--bg3);
-    border-radius: 10px;
-    padding: 10px 12px;
-    font-size: .82rem;
-    color: var(--text-muted);
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
+  .card-access { background: var(--bg3); border-radius: 10px; padding: 10px 12px; font-size: .82rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 4px; }
   .card-access-row { display: flex; align-items: flex-start; gap: 7px; }
   .card-access-row span:first-child { flex-shrink: 0; }
 
-  .card-meta {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    font-size: .85rem;
-    color: var(--text-muted);
-    flex-wrap: wrap;
-  }
+  .card-meta { display: flex; align-items: center; gap: 14px; font-size: .85rem; color: var(--text-muted); flex-wrap: wrap; }
   .card-meta-item { display: flex; align-items: center; gap: 5px; }
+  .card-footer { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 8px; }
 
-  .card-footer {
-    padding: 0 20px 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 13px 20px;
-    border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: .92rem;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    transition: opacity .18s, transform .12s;
-  }
+  .btn { display: block; width: 100%; padding: 13px 20px; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .92rem; font-weight: 700; text-align: center; text-decoration: none; cursor: pointer; border: none; transition: opacity .18s, transform .12s; }
   .btn:hover { opacity: .88; transform: translateY(-1px); }
   .btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
-  .btn-primary { background: var(--sage); color: #fff; }
+  .btn-primary   { background: var(--sage); color: #fff; }
   .btn-secondary { background: var(--bg3); color: var(--text); border: 1.5px solid var(--border); }
-  .btn-listen {
-    background: transparent;
-    border: 1.5px solid var(--border);
-    color: var(--text-muted);
-    font-size: .82rem;
-    padding: 8px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-    justify-content: center;
-    transition: border-color .18s, color .18s;
-  }
+  .btn-listen { background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); font-size: .82rem; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-family: 'DM Sans', sans-serif; display: flex; align-items: center; gap: 6px; width: 100%; justify-content: center; transition: border-color .18s, color .18s; }
   .btn-listen:hover { border-color: var(--sage); color: var(--text); }
   .btn-listen:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 
-  /* ── EMPTY STATE ── */
-  .empty {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
+  .empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); }
   .empty-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
   .empty h3 { font-family: 'DM Serif Display', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 8px; }
 
-  /* ── LOADING ── */
-  .loading {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-    font-size: .95rem;
-  }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid var(--border);
-    border-top-color: var(--sage);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
-  }
+  .loading { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: .95rem; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--sage); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* ── FOOTER ── */
-  .footer {
-    text-align: center;
-    padding: 32px 20px;
-    border-top: 1px solid var(--border);
-    color: var(--text-muted);
-    font-size: .85rem;
-    line-height: 1.6;
-  }
+  .footer { text-align: center; padding: 32px 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: .85rem; line-height: 1.6; }
   .footer a { color: var(--sage-light); }
 
-  /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
-    .hero h1 { font-size: 1.8rem; }
+    .hero { height: 260px; }
+    .hero-text h1 { font-size: 1.8rem; }
     .a11y-bar { justify-content: flex-start; }
   }
 </style>
@@ -403,57 +253,34 @@
 <!-- ACCESSIBILITY BAR -->
 <div class="a11y-bar" role="toolbar" aria-label="Accessibility options">
   <span class="a11y-label">Accessibility:</span>
-  <button class="a11y-btn" id="btn-large-print" onclick="toggleLargePrint()" aria-pressed="false">
-    🔡 Large Print
-  </button>
-  <button class="a11y-btn" id="btn-contrast" onclick="toggleContrast()" aria-pressed="false">
-    ◑ High Contrast
-  </button>
+  <button class="a11y-btn" id="btn-large-print" onclick="toggleLargePrint()" aria-pressed="false">🔡 Large Print</button>
+  <button class="a11y-btn" id="btn-contrast" onclick="toggleContrast()" aria-pressed="false">◑ High Contrast</button>
 </div>
 
-<!-- HERO -->
+<!-- HERO PHOTO -->
 <header class="hero">
-  <span class="hero-icon" aria-hidden="true">🤝</span>
-  <h1>Upcoming <span>Events</span></h1>
-  <p>Safe Soulmates — fun, friendly, and accessible events for our community. Everyone is welcome.</p>
+  <img class="hero-img" src="hero.png" alt="Safe Soulmates community members together">
+  <div class="hero-overlay"></div>
+  <div class="hero-text">
+    <h1>Upcoming <span>Events</span></h1>
+    <p>Safe Soulmates — fun, friendly, and accessible events for our community. Everyone is welcome.</p>
+  </div>
 </header>
 
 <!-- FILTER BAR -->
 <nav class="filter-wrap" aria-label="Filter events by location">
   <div class="filter-scroll" role="list">
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem">
-      🗓️ All Events
-    </button>
-    <button class="filter-btn" data-filter="Cambridge" onclick="setFilter('Cambridge')" role="listitem">
-      <span class="dot" style="background:#F2D9DC"></span> Cambridge
-    </button>
-    <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem">
-      <span class="dot" style="background:#E0E0E0"></span> Peterborough
-    </button>
-    <button class="filter-btn" data-filter="Online" onclick="setFilter('Online')" role="listitem">
-      <span class="dot" style="background:#D9E3F2"></span> Online
-    </button>
-    <button class="filter-btn" data-filter="Other Events of Interest" onclick="setFilter('Other Events of Interest')" role="listitem">
-      ✨ Other Events of Interest
-    </button>
-    <button class="filter-btn" data-filter="St Neots" onclick="setFilter('St Neots')" role="listitem">
-      <span class="dot" style="background:#FDFAD5"></span> St Neots
-    </button>
-    <button class="filter-btn" data-filter="Huntingdon" onclick="setFilter('Huntingdon')" role="listitem">
-      <span class="dot" style="background:#E8DCEF"></span> Huntingdon
-    </button>
-    <button class="filter-btn" data-filter="Ely" onclick="setFilter('Ely')" role="listitem">
-      <span class="dot" style="background:#D6EDD9"></span> Ely
-    </button>
-    <button class="filter-btn" data-filter="St Ives" onclick="setFilter('St Ives')" role="listitem">
-      <span class="dot" style="background:#D6EFE8"></span> St Ives
-    </button>
-    <button class="filter-btn" data-filter="Day Trips" onclick="setFilter('Day Trips')" role="listitem">
-      🚌 Day Trips
-    </button>
-    <button class="filter-btn" data-filter="March" onclick="setFilter('March')" role="listitem">
-      <span class="dot" style="background:#FFE0C8"></span> March
-    </button>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem">🗓️ All Events</button>
+    <button class="filter-btn" data-filter="Cambridge" onclick="setFilter('Cambridge')" role="listitem"><span class="dot" style="background:#F2D9DC"></span> Cambridge</button>
+    <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem"><span class="dot" style="background:#E0E0E0"></span> Peterborough</button>
+    <button class="filter-btn" data-filter="Online" onclick="setFilter('Online')" role="listitem"><span class="dot" style="background:#D9E3F2"></span> Online</button>
+    <button class="filter-btn" data-filter="Other Events of Interest" onclick="setFilter('Other Events of Interest')" role="listitem">✨ Other Events of Interest</button>
+    <button class="filter-btn" data-filter="St Neots" onclick="setFilter('St Neots')" role="listitem"><span class="dot" style="background:#FDFAD5"></span> St Neots</button>
+    <button class="filter-btn" data-filter="Huntingdon" onclick="setFilter('Huntingdon')" role="listitem"><span class="dot" style="background:#E8DCEF"></span> Huntingdon</button>
+    <button class="filter-btn" data-filter="Ely" onclick="setFilter('Ely')" role="listitem"><span class="dot" style="background:#D6EDD9"></span> Ely</button>
+    <button class="filter-btn" data-filter="St Ives" onclick="setFilter('St Ives')" role="listitem"><span class="dot" style="background:#D6EFE8"></span> St Ives</button>
+    <button class="filter-btn" data-filter="Day Trips" onclick="setFilter('Day Trips')" role="listitem">🚌 Day Trips</button>
+    <button class="filter-btn" data-filter="March" onclick="setFilter('March')" role="listitem"><span class="dot" style="background:#FFE0C8"></span> March</button>
   </div>
 </nav>
 
@@ -461,10 +288,7 @@
 <main class="events-wrap">
   <p class="events-count" id="events-count" aria-live="polite"></p>
   <div class="grid" id="events-grid" role="list" aria-label="Events list">
-    <div class="loading">
-      <div class="spinner" aria-hidden="true"></div>
-      Loading events…
-    </div>
+    <div class="loading"><div class="spinner" aria-hidden="true"></div>Loading events…</div>
   </div>
 </main>
 
@@ -474,35 +298,22 @@
 </footer>
 
 <script>
-  // ── CONFIG ──
-  // Replace SHEET_ID with your actual Google Sheet ID
   const SHEET_ID = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
   const SHEET_NAME = 'Sheet1';
 
-  // ── LOCATION COLOURS ──
   const locationColours = {
-    'cambridge':    '#F2D9DC',
-    'online':       '#D9E3F2',
-    'ely':          '#D6EDD9',
-    'huntingdon':   '#E8DCEF',
-    'peterborough': '#E0E0E0',
-    'st neots':     '#FDFAD5',
-    'st ives':      '#D6EFE8',
-    'march':        '#FFE0C8',
-    'day trips':    '#FFF3CD',
+    'cambridge':'#F2D9DC','online':'#D9E3F2','ely':'#D6EDD9',
+    'huntingdon':'#E8DCEF','peterborough':'#E0E0E0','st neots':'#FDFAD5',
+    'st ives':'#D6EFE8','march':'#FFE0C8','day trips':'#FFF3CD',
   };
-
   const locationEmojis = {
-    'cambridge': '🌉', 'online': '💻', 'ely': '⛪',
-    'huntingdon': '🦌', 'peterborough': '🏛️', 'st neots': '🏘️',
-    'st ives': '🌿', 'march': '🕰️', 'day trips': '🚌',
+    'cambridge':'🌉','online':'💻','ely':'⛪','huntingdon':'🦌',
+    'peterborough':'🏛️','st neots':'🏘️','st ives':'🌿','march':'🕰️','day trips':'🚌',
   };
 
-  // ── STATE ──
   let allEvents = [];
   let currentFilter = 'all';
 
-  // ── FETCH FROM GOOGLE SHEETS ──
   async function loadEvents() {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
     try {
@@ -511,7 +322,6 @@
       const json = JSON.parse(text.substring(47, text.length - 2));
       const rows = json.table.rows;
       const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
-
       allEvents = rows
         .map(row => {
           const obj = {};
@@ -522,7 +332,6 @@
           return obj;
         })
         .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
-
       renderEvents();
     } catch (err) {
       document.getElementById('events-grid').innerHTML = `
@@ -535,7 +344,6 @@
     }
   }
 
-  // ── FILTER ──
   function setFilter(filter) {
     currentFilter = filter;
     document.querySelectorAll('.filter-btn').forEach(b => {
@@ -545,11 +353,9 @@
     renderEvents();
   }
 
-  // ── RENDER ──
   function renderEvents() {
     const grid = document.getElementById('events-grid');
     const countEl = document.getElementById('events-count');
-
     let filtered = allEvents;
     if (currentFilter !== 'all') {
       filtered = allEvents.filter(e =>
@@ -557,23 +363,14 @@
         (e['tags'] || '').toLowerCase().includes(currentFilter.toLowerCase())
       );
     }
-
     countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : ''}`;
-
     if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="empty">
-          <span class="empty-icon">🔍</span>
-          <h3>No events found</h3>
-          <p>There are no events in this area right now. Try a different filter or check back soon!</p>
-        </div>`;
+      grid.innerHTML = `<div class="empty"><span class="empty-icon">🔍</span><h3>No events found</h3><p>There are no events in this area right now. Try a different filter or check back soon!</p></div>`;
       return;
     }
-
     grid.innerHTML = filtered.map((e, i) => buildCard(e, i)).join('');
   }
 
-  // ── BUILD CARD ──
   function buildCard(e, i) {
     const name        = e['event name'] || '';
     const date        = e['date'] || '';
@@ -592,37 +389,20 @@
     const booking     = e['booking required'] || '';
     const contact     = e['contact'] || '';
 
-    const locKey = location.toLowerCase();
+    const locKey    = location.toLowerCase();
     const locColour = locationColours[locKey] || '#e0e0e0';
     const locEmoji  = locationEmojis[locKey] || '📍';
 
-    // image or placeholder
     const imgHtml = imageUrl
-      ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.parentNode.innerHTML=buildPlaceholder('${locColour}','${locEmoji}')">`
+      ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${locColour}>${locEmoji}</div>'">`
       : `<div class="card-img-placeholder" style="background:${locColour}">${locEmoji}</div>`;
 
-    // location tag
-    const locTag = location
-      ? `<span class="tag" style="background:${locColour};color:#222">${location}</span>`
-      : '';
-
-    // extra tags
-    const extraTags = tags
-      ? tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text-muted);border:1px solid var(--border)">${t.trim()}</span>`).join('')
-      : '';
-
-    // status tag
+    const locTag    = location ? `<span class="tag" style="background:${locColour};color:#222">${location}</span>` : '';
+    const extraTags = tags ? tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text-muted);border:1px solid var(--border)">${t.trim()}</span>`).join('') : '';
     const statusKey = status.toLowerCase().replace(/\s+/g, '-');
-    const statusTag = status
-      ? `<span class="tag status-${statusKey}">${status}</span>`
-      : '';
+    const statusTag = status ? `<span class="tag status-${statusKey}">${status}</span>` : '';
+    const costTag   = cost ? `<span class="tag" style="background:var(--lime);color:#222">${cost}</span>` : '';
 
-    // cost tag
-    const costTag = cost
-      ? `<span class="tag" style="background:var(--lime);color:#222">${cost}</span>`
-      : '';
-
-    // accessibility block
     const accessRows = [
       accessNotes ? `<div class="card-access-row"><span>♿</span><span>${accessNotes}</span></div>` : '',
       sensory     ? `<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>` : '',
@@ -630,31 +410,22 @@
       booking === 'Yes' ? `<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>` : '',
       contact     ? `<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>` : '',
     ].filter(Boolean).join('');
+    const accessBlock = accessRows ? `<div class="card-access" aria-label="Accessibility information">${accessRows}</div>` : '';
 
-    const accessBlock = accessRows
-      ? `<div class="card-access" aria-label="Accessibility information">${accessRows}</div>`
-      : '';
-
-    // date/time meta
     const metaItems = [
       date ? `<span class="card-meta-item">📅 ${date}</span>` : '',
       time ? `<span class="card-meta-item">🕐 ${time}</span>` : '',
     ].filter(Boolean).join('');
-
     const metaHtml = metaItems ? `<div class="card-meta">${metaItems}</div>` : '';
 
-    // listen text (for TTS)
-    const listenText = `${name}. ${date ? 'Date: ' + date + '.' : ''} ${time ? 'Time: ' + time + '.' : ''} ${location ? 'Location: ' + location + '.' : ''} ${description} ${accessNotes ? 'Accessibility: ' + accessNotes : ''}`.replace(/"/g, '&quot;');
-
+    const listenText = `${name}. ${date ? 'Date: '+date+'.' : ''} ${time ? 'Time: '+time+'.' : ''} ${location ? 'Location: '+location+'.' : ''} ${description} ${accessNotes ? 'Accessibility: '+accessNotes : ''}`.replace(/"/g, '&quot;');
     const delay = Math.min(i * 0.05, 0.4);
 
     return `
       <article class="card" role="listitem" style="animation-delay:${delay}s" aria-label="${name}">
         ${imgHtml}
         <div class="card-body">
-          <div class="tags">
-            ${locTag}${extraTags}${statusTag}${costTag}
-          </div>
+          <div class="tags">${locTag}${extraTags}${statusTag}${costTag}</div>
           <h2 class="card-title">${name}</h2>
           ${description ? `<p class="card-desc">${description}</p>` : ''}
           ${accessBlock}
@@ -671,23 +442,16 @@
       </article>`;
   }
 
-  // ── TEXT TO SPEECH ──
   let currentUtterance = null;
   function speakEvent(text) {
-    if (currentUtterance) {
-      window.speechSynthesis.cancel();
-      currentUtterance = null;
-      return;
-    }
+    if (currentUtterance) { window.speechSynthesis.cancel(); currentUtterance = null; return; }
     const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.9;
-    utter.pitch = 1;
+    utter.rate = 0.9; utter.pitch = 1;
     utter.onend = () => { currentUtterance = null; };
     currentUtterance = utter;
     window.speechSynthesis.speak(utter);
   }
 
-  // ── LARGE PRINT ──
   function toggleLargePrint() {
     const btn = document.getElementById('btn-large-print');
     document.body.classList.toggle('large-print');
@@ -696,7 +460,6 @@
     btn.setAttribute('aria-pressed', on);
   }
 
-  // ── HIGH CONTRAST ──
   function toggleContrast() {
     const btn = document.getElementById('btn-contrast');
     document.body.classList.toggle('high-contrast');
@@ -705,7 +468,6 @@
     btn.setAttribute('aria-pressed', on);
   }
 
-  // ── INIT ──
   loadEvents();
 </script>
 </body>
