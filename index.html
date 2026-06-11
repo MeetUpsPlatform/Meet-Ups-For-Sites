@@ -20,15 +20,6 @@
     --border:  rgba(255,255,255,.08);
     --text:    #f0ede8;
     --text-muted: rgba(240,237,232,.55);
-    --col-cambridge:   #F2D9DC;
-    --col-online:      #D9E3F2;
-    --col-ely:         #D6EDD9;
-    --col-huntingdon:  #E8DCEF;
-    --col-peterborough:#E0E0E0;
-    --col-st-neots:    #FDFAD5;
-    --col-st-ives:     #D6EFE8;
-    --col-march:       #FFE0C8;
-    --col-default:     #e0e0e0;
     --font-size-base: 1rem;
     --radius: 18px;
   }
@@ -58,6 +49,7 @@
     transition: font-size .2s;
   }
 
+  /* ACCESSIBILITY BAR */
   .a11y-bar {
     background: var(--bg2);
     border-bottom: 1px solid var(--border);
@@ -87,10 +79,11 @@
   .a11y-btn.active { background: var(--sage); border-color: var(--sage); color: #fff; }
   .a11y-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
 
+  /* HERO */
   .hero {
     position: relative;
     width: 100%;
-    height: 340px;
+    height: 300px;
     overflow: hidden;
   }
   .hero-img {
@@ -107,7 +100,7 @@
   }
   .hero-text {
     position: absolute;
-    bottom: 2.2rem;
+    bottom: 2rem;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
@@ -116,7 +109,7 @@
   }
   .hero-text h1 {
     font-family: 'DM Serif Display', serif;
-    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-size: clamp(1.8rem, 5vw, 3rem);
     color: #fff;
     text-shadow: 0 2px 12px rgba(0,0,0,0.5);
     margin-bottom: 0.5rem;
@@ -124,7 +117,7 @@
   .hero-text h1 span { color: var(--lime); }
   .hero-text p {
     color: rgba(255,255,255,0.88);
-    font-size: 1.05rem;
+    font-size: 1rem;
     background: rgba(0,0,0,0.3);
     display: inline-block;
     padding: 5px 16px;
@@ -132,6 +125,42 @@
     line-height: 1.65;
   }
 
+  /* INFO BANNER */
+  .info-banner {
+    background: linear-gradient(135deg, rgba(115,151,108,0.18) 0%, rgba(93,121,176,0.18) 100%);
+    border-bottom: 1px solid rgba(115,151,108,0.3);
+    padding: 16px 20px;
+  }
+  .info-banner-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .info-banner-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 1px; }
+  .info-banner-text { flex: 1; min-width: 200px; }
+  .info-banner-text p { font-size: .9rem; color: var(--text); line-height: 1.6; }
+  .info-banner-text p + p { margin-top: 6px; }
+  .info-banner-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    background: var(--sage);
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 18px;
+    border-radius: 30px;
+    font-size: .88rem;
+    font-weight: 700;
+    transition: opacity .18s;
+  }
+  .info-banner-link:hover { opacity: .85; }
+  .info-banner-link:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
+
+  /* FILTER BAR */
   .filter-wrap {
     position: sticky;
     top: 0;
@@ -174,11 +203,13 @@
   .filter-btn:focus-visible { outline: 3px solid var(--lime); outline-offset: 2px; }
   .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; border: 1.5px solid rgba(255,255,255,.2); }
 
+  /* GRID */
   .events-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 20px 60px; }
   .events-count { font-size: .88rem; color: var(--text-muted); margin-bottom: 20px; }
   .events-count strong { color: var(--sage-light); }
   .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
 
+  /* CARD */
   .card {
     background: var(--bg2);
     border: 1.5px solid var(--border);
@@ -191,6 +222,9 @@
   }
   .card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,.4); border-color: rgba(115,151,108,.35); }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* COLOUR BAND at top of card */
+  .card-band { height: 6px; width: 100%; display: block; }
 
   .card-img { width: 100%; height: 180px; object-fit: cover; display: block; }
   .card-img-placeholder { height: 180px; display: flex; align-items: center; justify-content: center; font-size: 3.5rem; }
@@ -237,9 +271,10 @@
 
   @media (max-width: 600px) {
     .grid { grid-template-columns: 1fr; }
-    .hero { height: 260px; }
-    .hero-text h1 { font-size: 1.8rem; }
+    .hero { height: 240px; }
+    .hero-text h1 { font-size: 1.7rem; }
     .a11y-bar { justify-content: flex-start; }
+    .info-banner-inner { flex-direction: column; }
   }
 </style>
 </head>
@@ -262,20 +297,34 @@
   </div>
 </header>
 
+<!-- INFO BANNER -->
+<div class="info-banner" role="note" aria-label="About this page">
+  <div class="info-banner-inner">
+    <div class="info-banner-icon">💡</div>
+    <div class="info-banner-text">
+      <p><strong>This page shows new, special, or bookable events only.</strong></p>
+      <p>Safe Soulmates runs around <strong>30 events every month</strong> — including regular weekly and monthly Meet Ups across Cambridge, Peterborough, Ely, Huntingdon, St Neots, St Ives and online. You can find all of those on our full events schedule.</p>
+      <a class="info-banner-link" href="https://sites.google.com/d/1pMxv5GSZ2P14zKD_BII0mE7g051xpcN-/p/1k9TUWOQkGuYbTQM-YDgEaBMotSu_I0XL/edit" target="_blank" rel="noopener">
+        🗓️ See ALL our events here
+      </a>
+    </div>
+  </div>
+</div>
+
 <!-- FILTER BAR -->
 <nav class="filter-wrap" aria-label="Filter events by location">
   <div class="filter-scroll" role="list">
     <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem">🗓️ All Events</button>
-    <button class="filter-btn" data-filter="Cambridge" onclick="setFilter('Cambridge')" role="listitem"><span class="dot" style="background:#F2D9DC"></span> Cambridge</button>
-    <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem"><span class="dot" style="background:#E0E0E0"></span> Peterborough</button>
-    <button class="filter-btn" data-filter="Online" onclick="setFilter('Online')" role="listitem"><span class="dot" style="background:#D9E3F2"></span> Online</button>
+    <button class="filter-btn" data-filter="Cambridge" onclick="setFilter('Cambridge')" role="listitem"><span class="dot" style="background:#F2B8C0"></span> Cambridge</button>
+    <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem"><span class="dot" style="background:#C8C8C8"></span> Peterborough</button>
+    <button class="filter-btn" data-filter="Online" onclick="setFilter('Online')" role="listitem"><span class="dot" style="background:#A8C0E8"></span> Online</button>
     <button class="filter-btn" data-filter="Other Events of Interest" onclick="setFilter('Other Events of Interest')" role="listitem">✨ Other Events of Interest</button>
-    <button class="filter-btn" data-filter="St Neots" onclick="setFilter('St Neots')" role="listitem"><span class="dot" style="background:#FDFAD5"></span> St Neots</button>
-    <button class="filter-btn" data-filter="Huntingdon" onclick="setFilter('Huntingdon')" role="listitem"><span class="dot" style="background:#E8DCEF"></span> Huntingdon</button>
-    <button class="filter-btn" data-filter="Ely" onclick="setFilter('Ely')" role="listitem"><span class="dot" style="background:#D6EDD9"></span> Ely</button>
-    <button class="filter-btn" data-filter="St Ives" onclick="setFilter('St Ives')" role="listitem"><span class="dot" style="background:#D6EFE8"></span> St Ives</button>
+    <button class="filter-btn" data-filter="St Neots" onclick="setFilter('St Neots')" role="listitem"><span class="dot" style="background:#F0ECA0"></span> St Neots</button>
+    <button class="filter-btn" data-filter="Huntingdon" onclick="setFilter('Huntingdon')" role="listitem"><span class="dot" style="background:#C8A8E0"></span> Huntingdon</button>
+    <button class="filter-btn" data-filter="Ely" onclick="setFilter('Ely')" role="listitem"><span class="dot" style="background:#90C890"></span> Ely</button>
+    <button class="filter-btn" data-filter="St Ives" onclick="setFilter('St Ives')" role="listitem"><span class="dot" style="background:#90D0B8"></span> St Ives</button>
     <button class="filter-btn" data-filter="Day Trips" onclick="setFilter('Day Trips')" role="listitem">🚌 Day Trips</button>
-    <button class="filter-btn" data-filter="March" onclick="setFilter('March')" role="listitem"><span class="dot" style="background:#FFE0C8"></span> March</button>
+    <button class="filter-btn" data-filter="March" onclick="setFilter('March')" role="listitem"><span class="dot" style="background:#F0B890"></span> March</button>
   </div>
 </nav>
 
@@ -290,24 +339,45 @@
 <footer class="footer">
   <p>Questions? Get in touch with the Safe Soulmates team. 💚</p>
   <p style="margin-top:6px; font-size:.8rem;">Events update automatically from our events sheet.</p>
+  <p style="margin-top:6px;"><a href="https://sites.google.com/d/1pMxv5GSZ2P14zKD_BII0mE7g051xpcN-/p/1k9TUWOQkGuYbTQM-YDgEaBMotSu_I0XL/edit" target="_blank" rel="noopener">View all Safe Soulmates events →</a></p>
 </footer>
 
 <script>
   const SHEET_ID = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
   const SHEET_NAME = 'Sheet1';
 
+  // Location colour bands (your established colour coding)
   const locationColours = {
-    'cambridge':'#F2D9DC','online':'#D9E3F2','ely':'#D6EDD9',
-    'huntingdon':'#E8DCEF','peterborough':'#E0E0E0','st neots':'#FDFAD5',
-    'st ives':'#D6EFE8','march':'#FFE0C8','day trips':'#FFF3CD',
+    'cambridge':    { band: '#E8848E', bg: '#F2D9DC' },
+    'online':       { band: '#5D79B0', bg: '#D9E3F2' },
+    'ely':          { band: '#73976C', bg: '#D6EDD9' },
+    'huntingdon':   { band: '#8863A8', bg: '#E8DCEF' },
+    'peterborough': { band: '#909090', bg: '#E0E0E0' },
+    'st neots':     { band: '#C8B800', bg: '#FDFAD5' },
+    'st ives':      { band: '#50A888', bg: '#D6EFE8' },
+    'march':        { band: '#D07848', bg: '#FFE0C8' },
+    'day trips':    { band: '#C89050', bg: '#FFF3CD' },
+    'wells by the sea': { band: '#C89050', bg: '#FFF3CD' },
+    'oliver mcgowan': { band: '#C05010', bg: '#FFD0A8' },
   };
+
   const locationEmojis = {
     'cambridge':'🌉','online':'💻','ely':'⛪','huntingdon':'🦌',
-    'peterborough':'🏛️','st neots':'🏘️','st ives':'🌿','march':'🕰️','day trips':'🚌',
+    'peterborough':'🏛️','st neots':'🏘️','st ives':'🌿','march':'🕰️',
+    'day trips':'🚌','wells by the sea':'🏖️',
   };
 
   let allEvents = [];
   let currentFilter = 'all';
+
+  // Parse a date string like "15th June 2026" into a Date object for sorting
+  function parseDate(dateStr) {
+    if (!dateStr) return new Date(9999, 0, 1);
+    // Remove ordinal suffixes: 1st, 2nd, 3rd, 4th etc
+    const cleaned = dateStr.toString().replace(/(\d+)(st|nd|rd|th)/i, '$1');
+    const d = new Date(cleaned);
+    return isNaN(d.getTime()) ? new Date(9999, 0, 1) : d;
+  }
 
   async function loadEvents() {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
@@ -327,6 +397,10 @@
           return obj;
         })
         .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
+
+      // Sort by date ascending — earliest first
+      allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
+
       renderEvents();
     } catch (err) {
       document.getElementById('events-grid').innerHTML = `
@@ -358,12 +432,22 @@
         (e['tags'] || '').toLowerCase().includes(currentFilter.toLowerCase())
       );
     }
-    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : ''}`;
+    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : ''} — sorted by date`;
     if (filtered.length === 0) {
       grid.innerHTML = `<div class="empty"><span class="empty-icon">🔍</span><h3>No events found</h3><p>There are no events in this area right now. Try a different filter or check back soon!</p></div>`;
       return;
     }
     grid.innerHTML = filtered.map((e, i) => buildCard(e, i)).join('');
+  }
+
+  function getLocColours(location) {
+    const key = (location || '').toLowerCase().trim();
+    // Try exact match first, then partial
+    if (locationColours[key]) return locationColours[key];
+    for (const [k, v] of Object.entries(locationColours)) {
+      if (key.includes(k) || k.includes(key)) return v;
+    }
+    return { band: '#909090', bg: '#e0e0e0' };
   }
 
   function buildCard(e, i) {
@@ -384,15 +468,15 @@
     const booking     = e['booking required'] || '';
     const contact     = e['contact'] || '';
 
+    const colours   = getLocColours(location);
     const locKey    = location.toLowerCase();
-    const locColour = locationColours[locKey] || '#e0e0e0';
     const locEmoji  = locationEmojis[locKey] || '📍';
 
     const imgHtml = imageUrl
-      ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${locColour}>${locEmoji}</div>'">`
-      : `<div class="card-img-placeholder" style="background:${locColour}">${locEmoji}</div>`;
+      ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${colours.bg}>${locEmoji}</div>'">`
+      : `<div class="card-img-placeholder" style="background:${colours.bg}">${locEmoji}</div>`;
 
-    const locTag    = location ? `<span class="tag" style="background:${locColour};color:#222">${location}</span>` : '';
+    const locTag    = location ? `<span class="tag" style="background:${colours.bg};color:#333">${location}</span>` : '';
     const extraTags = tags ? tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text-muted);border:1px solid var(--border)">${t.trim()}</span>`).join('') : '';
     const statusKey = status.toLowerCase().replace(/\s+/g, '-');
     const statusTag = status ? `<span class="tag status-${statusKey}">${status}</span>` : '';
@@ -418,6 +502,7 @@
 
     return `
       <article class="card" role="listitem" style="animation-delay:${delay}s" aria-label="${name}">
+        <span class="card-band" style="background:${colours.band}" aria-hidden="true"></span>
         ${imgHtml}
         <div class="card-body">
           <div class="tags">${locTag}${extraTags}${statusTag}${costTag}</div>
