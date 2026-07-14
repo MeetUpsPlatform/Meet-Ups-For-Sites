@@ -721,97 +721,59 @@
     return { band: '#555e56', bg: '#CDD2CC' };
   }
 
-  function showError(msg) {
-    document.getElementById('events-grid').innerHTML = `
-      <div class="empty" role="alert">
-        <span class="empty-icon" aria-hidden="true">⚠️</span>
-        <h3>Couldn't load events right now</h3>
-        <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
-      </div>`;
-    console.error(msg);
-  }
+  async function loadEvents() {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+    try {
+      const res  = await fetch(url);
+      const text = await res.text();
 
-  function processTable(table) {
-    let rows = table.rows;
-    let cols = table.cols.map(c => c.label.toLowerCase().trim());
+      // Extract JSON reliably regardless of wrapper length
+      const start = text.indexOf('{');
+      const end   = text.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('No JSON found in response');
+      const json  = JSON.parse(text.slice(start, end + 1));
+      if (json.status === 'error') throw new Error(JSON.stringify(json.errors));
 
-    // gviz sometimes returns column letters instead of header text —
-    // when that happens, treat the first data row as the header row.
-    const allLetters = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
-    if (allLetters && rows.length > 0) {
-      const headerRow = rows.shift();
-      cols = headerRow.c.map(cell =>
-        cell ? (cell.f || cell.v || '').toString().toLowerCase().trim() : ''
-      );
-    }
+      let rows = json.table.rows;
+      let cols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
 
-    allEvents = rows
-      .map(row => {
+      // If all labels are empty, use first data row as headers
+      if (cols.every(c => c === '') && rows.length > 0) {
+        const hdr = rows.shift();
+        cols = hdr.c.map(cell => cell ? String(cell.f || cell.v || '').toLowerCase().trim() : '');
+      }
+
+      // Work out which column index is the event name (try by name, then fallback to col 0)
+      let nameIdx = cols.findIndex(c => c === 'event name');
+      if (nameIdx === -1) nameIdx = cols.findIndex(c => c.includes('event'));
+      if (nameIdx === -1) nameIdx = 0;
+
+      allEvents = rows.map(row => {
         const obj = {};
         cols.forEach((col, i) => {
           const cell = row.c[i];
-          obj[col] = cell ? (cell.f || cell.v || '') : '';
+          obj[col] = cell ? String(cell.f || cell.v || '') : '';
         });
-        if (!obj['event name'] && cols[0]) obj['event name'] = obj[cols[0]] || '';
+        // Always ensure 'event name' key exists
+        if (!obj['event name']) {
+          const cell = row.c[nameIdx];
+          obj['event name'] = cell ? String(cell.f || cell.v || '') : '';
+        }
         return obj;
-      })
-      .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
+      }).filter(e => e['event name'].trim() !== '');
 
-    allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
-    renderEvents();
+      allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
+      renderEvents();
 
-    // DEBUG — write column info into the count bar so it definitely shows
-    try {
-      const sampleVals = rows.length > 0 && rows[0].c
-        ? rows[0].c.map(function(c){ return c ? String(c.f||c.v||'') : ''; }).join(' | ')
-        : 'no rows';
-      document.getElementById('events-count').innerHTML +=
-        '<br><span style="color:#ff0;font-family:monospace;font-size:.8rem">' +
-        'COLS: ' + cols.join(' | ') +
-        ' &nbsp;|&nbsp; ROWS: ' + rows.length +
-        ' &nbsp;|&nbsp; EVENTS: ' + allEvents.length +
-        '<br>SAMPLE ROW: ' + sampleVals +
-        '</span>';
-    } catch(de) { console.error('debug err', de); }
-  }
-
-  function loadEvents() {
-    // Use JSONP (script injection) to avoid CORS issues with gviz
-    const cbName = '_gvizCb_' + Math.random().toString(36).slice(2);
-
-    const timer = setTimeout(() => {
-      delete window[cbName];
-      showError('Request timed out');
-    }, 12000);
-
-    window[cbName] = function(response) {
-      clearTimeout(timer);
-      delete window[cbName];
-      // RAW DUMP — show everything Google sent back
-      try {
-        var t = response.table;
-        var cols = t.cols.map(function(c){ return '"' + (c.label||'[empty]') + '"'; });
-        var row1 = t.rows.length > 0 ? t.rows[0].c.map(function(c){ return c ? String(c.f||c.v||'') : 'null'; }) : [];
-        document.getElementById('events-grid').innerHTML =
-          '<div style="color:#ff0;font-family:monospace;font-size:.85rem;padding:20px;line-height:2">' +
-          '<strong>Column labels from sheet (' + t.cols.length + ' cols):</strong><br>' +
-          cols.join('<br>') +
-          '<br><br><strong>First data row (' + t.rows.length + ' rows total):</strong><br>' +
-          row1.join('<br>') +
-          '</div>';
-      } catch(e) {
-        showError(e);
-      }
-    };
-
-    const script = document.createElement('script');
-    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;handler:${cbName}&sheet=${encodeURIComponent(SHEET_NAME)}`;
-    script.onerror = () => {
-      clearTimeout(timer);
-      delete window[cbName];
-      showError('Script load failed');
-    };
-    document.head.appendChild(script);
+    } catch(err) {
+      document.getElementById('events-grid').innerHTML = `
+        <div class="empty" role="alert">
+          <span class="empty-icon" aria-hidden="true">⚠️</span>
+          <h3>Couldn't load events right now</h3>
+          <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
+        </div>`;
+      console.error(err);
+    }
   }
 
   function setFilter(filter) {
