@@ -355,7 +355,6 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  /* thick colour band at top */
   .card-band { height: 8px; width: 100%; display: block; }
 
   .card-img {
@@ -408,7 +407,6 @@
     flex: 1;
   }
 
-  /* accessibility info box */
   .card-access {
     background: var(--bg3);
     border-radius: 10px;
@@ -436,7 +434,6 @@
   }
   .card-access-row span:first-child { flex-shrink: 0; font-size: 1rem; }
 
-  /* date / time */
   .card-meta {
     display: flex;
     align-items: center;
@@ -667,38 +664,24 @@
 
 <script>
   const SHEET_ID   = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
-  const SHEET_NAME = 'Sheet1';
+  const SHEET_NAME = 'For Events';
 
-  // Safe Soulmates brand colours:
-  // Green #5c9464 | Grey #CDD2CC | Pink #B84666 | Dark grey #555e56 | Cream #f7f5e8
-  // Location colours use brand palette — band = button/stripe colour, bg = pale tint
   const locationColours = {
-    // Cambridge — pale pink (brand pink tint)
     'cambridge':          { band: '#B84666', bg: '#F5DDE5' },
-    // Online — pale blue (brand grey-blue tint)
     'online':             { band: '#5D79B0', bg: '#DDE5F2' },
-    // Ely — green (brand green)
     'ely':                { band: '#5c9464', bg: '#D8EDD9' },
-    // Huntingdon — purple
     'huntingdon':         { band: '#7A5CA8', bg: '#E8E0F5' },
-    // Peterborough — grey (brand grey)
     'peterborough':       { band: '#555e56', bg: '#CDD2CC' },
-    // St Neots — warm yellow
     'st neots':           { band: '#A89828', bg: '#F5F0C0' },
-    // St Ives — greenish (lighter brand green)
     'st ives':            { band: '#4A9878', bg: '#D0EEE4' },
-    // March — reddish
     'march':              { band: '#B84040', bg: '#F0D8D8' },
-    // Day trips / day out — warm beige
     'day trips':          { band: '#9A7848', bg: '#F0E8D5' },
     'wells by the sea':   { band: '#9A7848', bg: '#F0E8D5' },
     'milton keynes':      { band: '#9A7848', bg: '#F0E8D5' },
-    // Oliver McGowan — dark orange-brown
     'oliver mcgowan':     { band: '#7A3010', bg: '#E8C4A0' },
     'oliver mcgowan mandatory training': { band: '#7A3010', bg: '#E8C4A0' },
   };
 
-  // City keywords in priority order — checked against venue name strings
   const cityKeywords = [
     'oliver mcgowan', 'wells by the sea', 'milton keynes',
     'st neots', 'st ives', 'cambridge', 'peterborough',
@@ -721,11 +704,6 @@
     return isNaN(d.getTime()) ? new Date(9999, 0, 1) : d;
   }
 
-  // Robust colour lookup:
-  // 1. Exact match on location string
-  // 2. Location string CONTAINS a city keyword (e.g. "Junction Cambridge" → Cambridge)
-  // 3. Tags column contains a city keyword
-  // 4. Grey fallback
   function getLocColours(location, tags) {
     const key     = (location || '').toLowerCase().trim();
     const tagsKey = (tags     || '').toLowerCase().trim();
@@ -844,7 +822,6 @@
     const locKey   = location.toLowerCase();
     const locEmoji = locationEmojis[locKey] || '📍';
 
-    const safeImg = imageUrl.replace(/'/g, '%27');
     const imgHtml = imageUrl
       ? `<img class="card-img" src="${imageUrl}" alt="${name} event image" loading="lazy"
            onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${colours.bg} aria-hidden=true>${locEmoji}</div>'">`
