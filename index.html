@@ -721,49 +721,73 @@
     return { band: '#555e56', bg: '#CDD2CC' };
   }
 
-  async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
-    try {
-      const res  = await fetch(url);
-      const text = await res.text();
-      const json = JSON.parse(text.substring(47, text.length - 2));
-      let rows = json.table.rows;
-      let cols = json.table.cols.map(c => c.label.toLowerCase().trim());
+  function showError(msg) {
+    document.getElementById('events-grid').innerHTML = `
+      <div class="empty" role="alert">
+        <span class="empty-icon" aria-hidden="true">⚠️</span>
+        <h3>Couldn't load events right now</h3>
+        <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
+      </div>`;
+    console.error(msg);
+  }
 
-      // gviz sometimes returns column letters (a, b, c…) instead of header text.
-      // When that happens, treat the first data row as the header row instead.
-      const allLetters = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
-      if (allLetters && rows.length > 0) {
-        const headerRow = rows.shift();
-        cols = headerRow.c.map(cell =>
-          cell ? (cell.f || cell.v || '').toString().toLowerCase().trim() : ''
-        );
-      }
+  function processTable(table) {
+    let rows = table.rows;
+    let cols = table.cols.map(c => c.label.toLowerCase().trim());
 
-      allEvents = rows
-        .map(row => {
-          const obj = {};
-          cols.forEach((col, i) => {
-            const cell = row.c[i];
-            obj[col] = cell ? (cell.f || cell.v || '') : '';
-          });
-          // normalise: if header came through differently, alias to 'event name'
-          if (!obj['event name'] && cols[0]) obj['event name'] = obj[cols[0]] || '';
-          return obj;
-        })
-        .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
-
-      allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
-      renderEvents();
-    } catch (err) {
-      document.getElementById('events-grid').innerHTML = `
-        <div class="empty" role="alert">
-          <span class="empty-icon" aria-hidden="true">⚠️</span>
-          <h3>Couldn't load events right now</h3>
-          <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
-        </div>`;
-      console.error(err);
+    // gviz sometimes returns column letters instead of header text —
+    // when that happens, treat the first data row as the header row.
+    const allLetters = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
+    if (allLetters && rows.length > 0) {
+      const headerRow = rows.shift();
+      cols = headerRow.c.map(cell =>
+        cell ? (cell.f || cell.v || '').toString().toLowerCase().trim() : ''
+      );
     }
+
+    allEvents = rows
+      .map(row => {
+        const obj = {};
+        cols.forEach((col, i) => {
+          const cell = row.c[i];
+          obj[col] = cell ? (cell.f || cell.v || '') : '';
+        });
+        if (!obj['event name'] && cols[0]) obj['event name'] = obj[cols[0]] || '';
+        return obj;
+      })
+      .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
+
+    allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
+    renderEvents();
+  }
+
+  function loadEvents() {
+    // Use JSONP (script injection) to avoid CORS issues with gviz
+    const cbName = '_gvizCb_' + Math.random().toString(36).slice(2);
+
+    const timer = setTimeout(() => {
+      delete window[cbName];
+      showError('Request timed out');
+    }, 12000);
+
+    window[cbName] = function(response) {
+      clearTimeout(timer);
+      delete window[cbName];
+      try {
+        processTable(response.table);
+      } catch(e) {
+        showError(e);
+      }
+    };
+
+    const script = document.createElement('script');
+    script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;handler:${cbName}&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    script.onerror = () => {
+      clearTimeout(timer);
+      delete window[cbName];
+      showError('Script load failed');
+    };
+    document.head.appendChild(script);
   }
 
   function setFilter(filter) {
