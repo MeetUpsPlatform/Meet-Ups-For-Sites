@@ -758,19 +758,21 @@
       .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
 
     allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
-
-    // DEBUG — shows column names on the page so we can see what's coming from the sheet
-    const firstRow = allEvents[0] || rows[0]?.c?.reduce((o,c,i)=>({...o,[cols[i]]:c?(c.f||c.v):null}),{}) || {};
-    document.getElementById('events-grid').insertAdjacentHTML('beforebegin', `
-      <div style="background:#1a1a00;border:2px solid #ff0;border-radius:10px;padding:16px;margin-bottom:16px;font-size:.83rem;color:#ff9;font-family:monospace;word-break:break-all;">
-        <strong style="color:#ff0">🔍 Debug — column names from sheet:</strong><br><br>
-        <strong>Cols:</strong> ${cols.map((c,i)=>`[${i}]="${c}"`).join(' ')}<br><br>
-        <strong>Row count:</strong> ${rows.length}<br><br>
-        <strong>Events after filter:</strong> ${allEvents.length}<br><br>
-        <strong>First row values:</strong> ${JSON.stringify(firstRow).slice(0,300)}
-      </div>`);
-
     renderEvents();
+
+    // DEBUG — write column info into the count bar so it definitely shows
+    try {
+      const sampleVals = rows.length > 0 && rows[0].c
+        ? rows[0].c.map(function(c){ return c ? String(c.f||c.v||'') : ''; }).join(' | ')
+        : 'no rows';
+      document.getElementById('events-count').innerHTML +=
+        '<br><span style="color:#ff0;font-family:monospace;font-size:.8rem">' +
+        'COLS: ' + cols.join(' | ') +
+        ' &nbsp;|&nbsp; ROWS: ' + rows.length +
+        ' &nbsp;|&nbsp; EVENTS: ' + allEvents.length +
+        '<br>SAMPLE ROW: ' + sampleVals +
+        '</span>';
+    } catch(de) { console.error('debug err', de); }
   }
 
   function loadEvents() {
