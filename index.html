@@ -727,8 +727,19 @@
       const res  = await fetch(url);
       const text = await res.text();
       const json = JSON.parse(text.substring(47, text.length - 2));
-      const rows = json.table.rows;
-      const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
+      let rows = json.table.rows;
+      let cols = json.table.cols.map(c => c.label.toLowerCase().trim());
+
+      // gviz sometimes returns column letters (a, b, c…) instead of header text.
+      // When that happens, treat the first data row as the header row instead.
+      const allLetters = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
+      if (allLetters && rows.length > 0) {
+        const headerRow = rows.shift();
+        cols = headerRow.c.map(cell =>
+          cell ? (cell.f || cell.v || '').toString().toLowerCase().trim() : ''
+        );
+      }
+
       allEvents = rows
         .map(row => {
           const obj = {};
@@ -736,6 +747,8 @@
             const cell = row.c[i];
             obj[col] = cell ? (cell.f || cell.v || '') : '';
           });
+          // normalise: if header came through differently, alias to 'event name'
+          if (!obj['event name'] && cols[0]) obj['event name'] = obj[cols[0]] || '';
           return obj;
         })
         .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
