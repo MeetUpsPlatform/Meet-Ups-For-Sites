@@ -787,8 +787,18 @@
     window[cbName] = function(response) {
       clearTimeout(timer);
       delete window[cbName];
+      // RAW DUMP — show everything Google sent back
       try {
-        processTable(response.table);
+        var t = response.table;
+        var cols = t.cols.map(function(c){ return '"' + (c.label||'[empty]') + '"'; });
+        var row1 = t.rows.length > 0 ? t.rows[0].c.map(function(c){ return c ? String(c.f||c.v||'') : 'null'; }) : [];
+        document.getElementById('events-grid').innerHTML =
+          '<div style="color:#ff0;font-family:monospace;font-size:.85rem;padding:20px;line-height:2">' +
+          '<strong>Column labels from sheet (' + t.cols.length + ' cols):</strong><br>' +
+          cols.join('<br>') +
+          '<br><br><strong>First data row (' + t.rows.length + ' rows total):</strong><br>' +
+          row1.join('<br>') +
+          '</div>';
       } catch(e) {
         showError(e);
       }
