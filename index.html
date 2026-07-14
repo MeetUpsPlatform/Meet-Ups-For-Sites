@@ -737,16 +737,21 @@
       let rows = json.table.rows;
       let cols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
 
-      // If all labels are empty, use first data row as headers
-      if (cols.every(c => c === '') && rows.length > 0) {
+      // gviz sometimes returns column letters (a, b, c…) or empty strings instead of
+      // header text. When that happens, treat the first data row as the header row.
+      const needsHeaderRow = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
+      if (needsHeaderRow && rows.length > 0) {
         const hdr = rows.shift();
         cols = hdr.c.map(cell => cell ? String(cell.f || cell.v || '').toLowerCase().trim() : '');
       }
 
-      // Work out which column index is the event name (try by name, then fallback to col 0)
-      let nameIdx = cols.findIndex(c => c === 'event name');
-      if (nameIdx === -1) nameIdx = cols.findIndex(c => c.includes('event'));
-      if (nameIdx === -1) nameIdx = 0;
+      // If cols still don't contain 'event name', fall back to known column order
+      if (!cols.includes('event name')) {
+        cols = ['event name','date','time','location','description','tags',
+                'button text','button link','image url','status',
+                'accessibility notes','sensory info','transport info','cost',
+                'booking required','contact'];
+      }
 
       allEvents = rows.map(row => {
         const obj = {};
@@ -754,13 +759,8 @@
           const cell = row.c[i];
           obj[col] = cell ? String(cell.f || cell.v || '') : '';
         });
-        // Always ensure 'event name' key exists
-        if (!obj['event name']) {
-          const cell = row.c[nameIdx];
-          obj['event name'] = cell ? String(cell.f || cell.v || '') : '';
-        }
         return obj;
-      }).filter(e => e['event name'].trim() !== '');
+      }).filter(e => (e['event name'] || '').trim() !== '');
 
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
