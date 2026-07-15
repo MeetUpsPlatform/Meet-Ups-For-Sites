@@ -778,9 +778,13 @@
         return obj;
       }).filter(e => (e['event name'] || '').trim().length > 1);
 
-      // Remove past events, then sort upcoming by nearest date first
+      // Only remove events where a year is specified AND the date is clearly in the past
       const today = new Date(); today.setHours(0,0,0,0);
-      allEvents = allEvents.filter(e => parseDate(e['date']) >= today);
+      allEvents = allEvents.filter(e => {
+        const hasYear = /\b\d{4}\b/.test(e['date'] || '');
+        if (!hasYear) return true; // no year = keep it (TBC, "24th July" etc.)
+        return parseDate(e['date']) >= today;
+      });
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
 
