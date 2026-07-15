@@ -840,7 +840,7 @@
 
     const imgHtml = imageUrl
       ? `<img class="card-img" src="${imageUrl}" alt="${name} event image" loading="lazy"
-           onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${colours.bg} aria-hidden=true>${locEmoji}</div>'">`
+           onerror="this.outerHTML='<div class=card-img-placeholder style=background:${colours.bg} aria-hidden=true>${locEmoji}</div>'">`
       : `<div class="card-img-placeholder" style="background:${colours.bg}" aria-hidden="true">${locEmoji}</div>`;
 
     const locTag    = location ? `<span class="tag" style="background:${colours.bg};color:#222">${location}</span>` : '';
