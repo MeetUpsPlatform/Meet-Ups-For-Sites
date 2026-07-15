@@ -721,44 +721,48 @@
     return { band: '#555e56', bg: '#CDD2CC' };
   }
 
+  // Simple but robust CSV parser that handles quoted fields and commas inside quotes
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = '', inQ = false;
+    for (let i = 0; i < text.length; i++) {
+      const ch = text[i];
+      if (inQ) {
+        if (ch === '"' && text[i+1] === '"') { field += '"'; i++; }
+        else if (ch === '"') { inQ = false; }
+        else { field += ch; }
+      } else {
+        if      (ch === '"')  { inQ = true; }
+        else if (ch === ',')  { row.push(field); field = ''; }
+        else if (ch === '\n' || ch === '\r') {
+          if (ch === '\r' && text[i+1] === '\n') i++;
+          row.push(field); field = '';
+          if (row.some(c => c !== '')) rows.push(row);
+          row = [];
+        } else { field += ch; }
+      }
+    }
+    if (field || row.length) { row.push(field); if (row.some(c => c !== '')) rows.push(row); }
+    return rows;
+  }
+
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+    // Use gviz CSV output — CORS-enabled, always includes header row first, no JSON weirdness
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
     try {
       const res  = await fetch(url);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const text = await res.text();
 
-      // Extract JSON reliably regardless of wrapper length
-      const start = text.indexOf('{');
-      const end   = text.lastIndexOf('}');
-      if (start === -1 || end === -1) throw new Error('No JSON found in response');
-      const json  = JSON.parse(text.slice(start, end + 1));
-      if (json.status === 'error') throw new Error(JSON.stringify(json.errors));
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error('Sheet appears empty');
 
-      let rows = json.table.rows;
-      let cols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
+      // First row is always the header
+      const headers = rows[0].map(h => h.toLowerCase().trim());
 
-      // gviz sometimes returns column letters (a, b, c…) or empty strings instead of
-      // header text. When that happens, treat the first data row as the header row.
-      const needsHeaderRow = cols.every(c => /^[a-z]{1,3}$/.test(c) || c === '');
-      if (needsHeaderRow && rows.length > 0) {
-        const hdr = rows.shift();
-        cols = hdr.c.map(cell => cell ? String(cell.f || cell.v || '').toLowerCase().trim() : '');
-      }
-
-      // If cols still don't contain 'event name', fall back to known column order
-      if (!cols.includes('event name')) {
-        cols = ['event name','date','time','location','description','tags',
-                'button text','button link','image url','status',
-                'accessibility notes','sensory info','transport info','cost',
-                'booking required','contact'];
-      }
-
-      allEvents = rows.map(row => {
+      allEvents = rows.slice(1).map(row => {
         const obj = {};
-        cols.forEach((col, i) => {
-          const cell = row.c[i];
-          obj[col] = cell ? String(cell.f || cell.v || '') : '';
-        });
+        headers.forEach((h, i) => { obj[h] = (row[i] || '').trim(); });
         return obj;
       }).filter(e => (e['event name'] || '').trim() !== '');
 
