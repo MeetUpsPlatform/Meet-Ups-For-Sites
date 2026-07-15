@@ -652,6 +652,28 @@
   </div>
 </main>
 
+<!-- EVENT MODAL -->
+<div id="event-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);overflow-y:auto;padding:20px 16px 40px;">
+  <div id="modal-inner" style="max-width:680px;margin:0 auto;background:var(--bg2);border-radius:20px;overflow:hidden;position:relative;border:2px solid var(--border);">
+    <button onclick="closeModal()" aria-label="Close event details" style="position:absolute;top:14px;right:14px;z-index:10;background:rgba(0,0,0,.6);border:2px solid var(--border);color:#fff;border-radius:50%;width:40px;height:40px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+    <div id="modal-band" style="height:10px;width:100%;"></div>
+    <div id="modal-img-wrap"></div>
+    <div style="padding:24px 28px 10px;">
+      <div id="modal-tags" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"></div>
+      <h2 id="modal-title" style="font-family:'DM Serif Display',serif;font-size:1.8rem;color:var(--text);line-height:1.2;margin-bottom:10px;"></h2>
+      <p id="modal-desc" style="font-size:1rem;color:var(--text-muted);line-height:1.7;margin-bottom:14px;"></p>
+      <div id="modal-access" style="background:var(--bg3);border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1px solid var(--border);display:none;">
+        <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;">Accessibility &amp; Info</p>
+        <div id="modal-access-rows"></div>
+      </div>
+      <div id="modal-meta" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 16px;background:var(--bg3);border-radius:12px;border:1px solid var(--border);margin-bottom:20px;font-size:1rem;font-weight:600;color:var(--text);"></div>
+    </div>
+    <div style="padding:0 28px 28px;display:flex;flex-direction:column;gap:10px;">
+      <div id="modal-btn"></div>
+    </div>
+  </div>
+</div>
+
 <!-- FOOTER -->
 <footer class="footer">
   <p>Questions? Get in touch with the Safe Soulmates team. 💚</p>
@@ -756,6 +778,9 @@
         return obj;
       }).filter(e => (e['event name'] || '').trim().length > 1);
 
+      // Remove past events, then sort upcoming by nearest date first
+      const today = new Date(); today.setHours(0,0,0,0);
+      allEvents = allEvents.filter(e => parseDate(e['date']) >= today);
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
 
@@ -814,10 +839,10 @@
         </div>`;
       return;
     }
-    grid.innerHTML = filtered.map((e, i) => buildCard(e, i)).join('');
+    grid.innerHTML = filtered.map((e, i) => buildCard(e, allEvents.indexOf(e), i)).join('');
   }
 
-  function buildCard(e, i) {
+  function buildCard(e, idx, i) {
     const name        = (e['event name'] || '').toString();
     const date        = (e['date']       || '').toString();
     const time        = (e['time']       || '').toString();
@@ -888,7 +913,7 @@
     const delay = Math.min(i * 0.05, 0.4);
 
     return `
-      <article class="card" role="listitem" style="animation-delay:${delay}s" aria-label="${name}${date ? ', ' + date : ''}${location ? ', ' + location : ''}">
+      <article class="card" role="listitem" style="animation-delay:${delay}s;cursor:pointer" aria-label="${name}${date ? ', ' + date : ''}${location ? ', ' + location : ''}" onclick="openModal(${idx})" tabindex="0" onkeydown="if(event.key==='Enter')openModal(${idx})">
         <span class="card-band" style="background:${colours.band}" aria-hidden="true"></span>
         ${imgHtml}
         <div class="card-body">
@@ -908,6 +933,106 @@
         </div>
       </article>`;
   }
+
+  // ── MODAL ──
+  function openModal(idx) {
+    const e = allEvents[idx];
+    if (!e) return;
+
+    const name        = (e['event name'] || '').toString();
+    const date        = (e['date']       || '').toString();
+    const time        = (e['time']       || '').toString();
+    const location    = (e['location']   || '').toString();
+    const description = (e['description']|| '').toString();
+    const tags        = (e['tags']       || '').toString();
+    const btnText     = (e['button text']|| 'Find Out More').toString();
+    const btnLink     = (e['button link']|| '').toString();
+    const imageUrl    = (e['image url']  || '').toString();
+    const status      = (e['status']     || '').toString().trim();
+    const accessNotes = (e['accessibility notes'] || '').toString();
+    const sensory     = (e['sensory info']         || '').toString();
+    const transport   = (e['transport info']        || '').toString();
+    const cost        = (e['cost']                  || '').toString();
+    const booking     = (e['booking required']      || '').toString();
+    const contact     = (e['contact']               || '').toString();
+
+    const colours  = getLocColours(location, tags);
+    const locKey   = location.toLowerCase();
+    const locEmoji = locationEmojis[locKey] || '📍';
+
+    document.getElementById('modal-band').style.background = colours.band;
+    document.getElementById('modal-title').textContent = name;
+    document.getElementById('modal-desc').textContent  = description;
+    document.getElementById('modal-desc').style.display = description ? '' : 'none';
+
+    // Image
+    const imgWrap = document.getElementById('modal-img-wrap');
+    if (imageUrl) {
+      const img = document.createElement('img');
+      img.src = imageUrl; img.alt = name;
+      img.style.cssText = 'width:100%;height:260px;object-fit:cover;display:block;';
+      img.onerror = () => { imgWrap.innerHTML = `<div style="height:260px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:${colours.bg}">${locEmoji}</div>`; };
+      imgWrap.innerHTML = ''; imgWrap.appendChild(img);
+    } else {
+      imgWrap.innerHTML = `<div style="height:260px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:${colours.bg}">${locEmoji}</div>`;
+    }
+
+    // Tags
+    const tagsEl = document.getElementById('modal-tags');
+    let tagsHtml = location ? `<span class="tag" style="background:${colours.bg};color:#222">${location}</span>` : '';
+    if (tags) tagsHtml += tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`).join('');
+    if (status) { const sk = status.toLowerCase().replace(/\s+/g,'-'); tagsHtml += `<span class="tag status-${sk}">${status}</span>`; }
+    if (cost)   tagsHtml += `<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>`;
+    tagsEl.innerHTML = tagsHtml;
+
+    // Accessibility
+    const accessRows = [
+      accessNotes ? `<div class="card-access-row"><span>♿</span><span>${accessNotes}</span></div>` : '',
+      sensory     ? `<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>`     : '',
+      transport   ? `<div class="card-access-row"><span>🚌</span><span>${transport}</span></div>`   : '',
+      booking === 'Yes' ? `<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>` : '',
+      contact     ? `<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>` : '',
+    ].filter(Boolean).join('');
+    const accessEl = document.getElementById('modal-access');
+    document.getElementById('modal-access-rows').innerHTML = accessRows;
+    accessEl.style.display = accessRows ? '' : 'none';
+
+    // Date/time
+    const metaEl = document.getElementById('modal-meta');
+    const metaItems = [
+      date ? `<span style="display:flex;align-items:center;gap:6px">📅 ${date}</span>` : '',
+      time ? `<span style="display:flex;align-items:center;gap:6px">🕐 ${time}</span>` : '',
+    ].filter(Boolean).join('');
+    metaEl.innerHTML = metaItems;
+    metaEl.style.display = metaItems ? '' : 'none';
+
+    // Button
+    document.getElementById('modal-btn').innerHTML = btnLink
+      ? `<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText}</a>`
+      : `<button class="btn btn-secondary" disabled>${btnText}</button>`;
+
+    // Show modal
+    const modal = document.getElementById('event-modal');
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+    modal.scrollTop = 0;
+    document.getElementById('modal-inner').focus && document.getElementById('modal-inner').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('event-modal').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  // Close on backdrop click
+  document.getElementById('event-modal').addEventListener('click', function(ev) {
+    if (ev.target === this) closeModal();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(ev) {
+    if (ev.key === 'Escape') closeModal();
+  });
 
   let currentBtn = null;
   let currentUtterance = null;
