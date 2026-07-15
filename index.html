@@ -722,73 +722,39 @@
   }
 
   async function loadEvents() {
-    // Try JSON first, fall back to CSV if it fails
-    const jsonUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
-    const csvUrl  = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&gid=0`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
 
-    // Column order verified from spreadsheet
+    // Column positions verified from spreadsheet
     const COLS = ['event name','date','time','location','description','tags',
                   'button text','button link','image url','status',
                   'accessibility notes','sensory info','transport info','cost',
                   'booking required','contact'];
-
     try {
-      // ── Attempt 1: gviz JSON ──
-      let events = null;
-      try {
-        const res  = await fetch(jsonUrl);
-        const text = await res.text();
-        const start = text.indexOf('{');
-        const end   = text.lastIndexOf('}');
-        if (start !== -1 && end !== -1) {
-          const json = JSON.parse(text.slice(start, end + 1));
-          if (json.table && json.table.rows && json.table.rows.length > 0) {
-            let rows = json.table.rows;
-            // Skip header row if gviz included it
-            const firstVal = (rows[0].c && rows[0].c[0])
-              ? String(rows[0].c[0].f || rows[0].c[0].v || '').toLowerCase().trim() : '';
-            if (firstVal === 'event name') rows = rows.slice(1);
-            events = rows.map(row => {
-              const obj = {};
-              COLS.forEach((col, i) => {
-                const cell = row.c ? row.c[i] : null;
-                obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
-              });
-              return obj;
-            }).filter(e => (e['event name'] || '').trim().length > 1);
-          }
-        }
-      } catch(e) { /* fall through to CSV */ }
+      const res  = await fetch(url);
+      const text = await res.text();
+      const start = text.indexOf('{');
+      const end   = text.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('No JSON in response');
+      const json = JSON.parse(text.slice(start, end + 1));
+      if (!json.table || !json.table.rows) throw new Error('No table data');
 
-      // ── Attempt 2: gviz CSV ──
-      if (!events || events.length === 0) {
-        const res  = await fetch(csvUrl);
-        const text = await res.text();
-        const lines = text.trim().split('\n');
-        if (lines.length > 1) {
-          // Parse CSV headers from first line
-          const headers = lines[0].split(',').map(h => h.replace(/^"|"$/g,'').toLowerCase().trim());
-          events = lines.slice(1).map(line => {
-            // Simple CSV field split (handles quoted commas)
-            const fields = [];
-            let f = '', inQ = false;
-            for (let i = 0; i < line.length; i++) {
-              const ch = line[i];
-              if (ch === '"') { inQ = !inQ; }
-              else if (ch === ',' && !inQ) { fields.push(f); f = ''; }
-              else { f += ch; }
-            }
-            fields.push(f);
-            const obj = {};
-            headers.forEach((h, i) => { obj[h] = (fields[i] || '').replace(/^"|"$/g,'').trim(); });
-            return obj;
-          }).filter(e => (e['event name'] || '').trim().length > 1);
-        }
+      let rows = json.table.rows;
+      // Skip header row if gviz included it
+      if (rows.length > 0) {
+        const first = rows[0].c && rows[0].c[0];
+        const val   = first ? String(first.f || first.v || '').toLowerCase().trim() : '';
+        if (val === 'event name') rows = rows.slice(1);
       }
 
-      if (!events || events.length === 0) throw new Error('No events found in sheet');
+      allEvents = rows.map(row => {
+        const obj = {};
+        COLS.forEach((col, i) => {
+          const cell = row.c ? row.c[i] : null;
+          obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
+        });
+        return obj;
+      }).filter(e => (e['event name'] || '').trim().length > 1);
 
-      allEvents = events;
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
 
