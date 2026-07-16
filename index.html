@@ -555,6 +555,7 @@
     .a11y-bar { justify-content: flex-start; }
     .info-banner-inner { flex-direction: column; }
     .colour-key-list { gap: 6px; }
+    .colour-key { display: none; }
   }
 
   /* ── REDUCED MOTION ── */
@@ -627,7 +628,6 @@
 <nav class="filter-wrap" aria-label="Filter events by location">
   <span class="filter-label" id="filter-label">Filter by location:</span>
   <div class="filter-scroll" role="list" aria-labelledby="filter-label">
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem" aria-pressed="true">🗓️ All Events</button>
     <button class="filter-btn" data-filter="Cambridge"    onclick="setFilter('Cambridge')"    role="listitem" aria-pressed="false"><span class="dot" style="background:#F5DDE5;border-color:#B84666" aria-hidden="true"></span> Cambridge</button>
     <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem" aria-pressed="false"><span class="dot" style="background:#CDD2CC;border-color:#555e56" aria-hidden="true"></span> Peterborough</button>
     <button class="filter-btn" data-filter="Online"       onclick="setFilter('Online')"       role="listitem" aria-pressed="false"><span class="dot" style="background:#DDE5F2;border-color:#5D79B0" aria-hidden="true"></span> Online</button>
@@ -638,6 +638,7 @@
     <button class="filter-btn" data-filter="St Ives"      onclick="setFilter('St Ives')"      role="listitem" aria-pressed="false"><span class="dot" style="background:#D0EEE4;border-color:#4A9878" aria-hidden="true"></span> St Ives</button>
     <button class="filter-btn" data-filter="Day Trips"    onclick="setFilter('Day Trips')"    role="listitem" aria-pressed="false"><span class="dot" style="background:#F0E8D5;border-color:#9A7848" aria-hidden="true"></span> Day Trips</button>
     <button class="filter-btn" data-filter="March"        onclick="setFilter('March')"        role="listitem" aria-pressed="false"><span class="dot" style="background:#F0D8D8;border-color:#B84040" aria-hidden="true"></span> March</button>
+    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem" aria-pressed="true">🗓️ See All Events</button>
   </div>
 </nav>
 
@@ -725,7 +726,23 @@
 
   function parseDate(dateStr) {
     if (!dateStr) return new Date(9999, 0, 1);
-    const cleaned = dateStr.toString().replace(/(\d+)(st|nd|rd|th)/i, '$1');
+    // Strip ordinal suffixes: 1st → 1, 22nd → 22, etc.
+    const cleaned = dateStr.toString().replace(/(\d+)(st|nd|rd|th)/gi, '$1').trim();
+    // Month name lookup
+    const months = {
+      january:1,february:2,march:3,april:4,may:5,june:6,
+      july:7,august:8,september:9,october:10,november:11,december:12,
+      jan:1,feb:2,mar:3,apr:4,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12
+    };
+    // Match "DD Month YYYY" or "DD Month" (e.g. "17 July 2026" or "24 July")
+    const m = cleaned.match(/^(\d{1,2})\s+([a-zA-Z]+)(?:\s+(\d{4}))?$/);
+    if (m) {
+      const day   = parseInt(m[1]);
+      const month = months[m[2].toLowerCase()];
+      const year  = m[3] ? parseInt(m[3]) : new Date().getFullYear();
+      if (month) return new Date(year, month - 1, day);
+    }
+    // Fallback
     const d = new Date(cleaned);
     return isNaN(d.getTime()) ? new Date(9999, 0, 1) : d;
   }
@@ -835,7 +852,7 @@
     }
 
     const filterLabel = currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : '';
-    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${filterLabel} — sorted by earliest date first`;
+    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${filterLabel} — earliest date first (on wider screens, read left to right)`;
 
     if (filtered.length === 0) {
       grid.innerHTML = `
