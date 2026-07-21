@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Safe Soulmates – New and Bookable Events</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
 <style>
   :root {
     --sage:        #73976C;
@@ -20,8 +20,6 @@
     --radius: 18px;
     --focus: #FFD700;
   }
-
-  /* ── LARGE PRINT MODE ── */
   body.large-print { --font-size-base: 1.28rem; }
   body.large-print .card-title  { font-size: 1.55rem !important; }
   body.large-print .card-desc   { font-size: 1.15rem !important; }
@@ -31,558 +29,106 @@
   body.large-print .btn         { font-size: 1.1rem !important; padding: 16px 20px !important; }
   body.large-print .card-meta   { font-size: 1rem !important; }
   body.large-print .banner-text { font-size: 1.1rem !important; }
-
-  /* ── HIGH CONTRAST MODE ── */
-  body.high-contrast {
-    --bg: #000; --bg2: #0a0a0a; --bg3: #111;
-    --text: #ffffff; --text-muted: #e0e0e0;
-    --border: rgba(255,255,255,.5);
-  }
+  body.high-contrast { --bg: #000; --bg2: #0a0a0a; --bg3: #111; --text: #ffffff; --text-muted: #e0e0e0; --border: rgba(255,255,255,.5); }
   body.high-contrast .card { border: 2px solid rgba(255,255,255,.6) !important; }
   body.high-contrast .card-access { border: 1px solid rgba(255,255,255,.3) !important; }
   body.high-contrast .tag { outline: 1px solid rgba(255,255,255,.4); }
-
-  /* ── SKIP LINK ── */
-  .skip-link {
-    position: absolute;
-    top: -100px;
-    left: 16px;
-    background: var(--focus);
-    color: #000;
-    font-weight: 700;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-size: 1rem;
-    z-index: 9999;
-    text-decoration: none;
-    transition: top .15s;
-  }
+  .skip-link { position: absolute; top: -100px; left: 16px; background: var(--focus); color: #000; font-weight: 700; padding: 10px 20px; border-radius: 8px; font-size: 1rem; z-index: 9999; text-decoration: none; transition: top .15s; }
   .skip-link:focus { top: 16px; }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    font-size: var(--font-size-base);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    line-height: 1.6;
-  }
-
-  /* ── FOCUS STYLES — visible for keyboard/switch users ── */
-  :focus-visible {
-    outline: 3px solid var(--focus);
-    outline-offset: 3px;
-    border-radius: 4px;
-  }
-
-  /* ── ACCESSIBILITY BAR ── */
-  .a11y-bar {
-    background: var(--bg2);
-    border-bottom: 2px solid var(--border);
-    padding: 10px 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .a11y-label {
-    font-size: .9rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-right: 4px;
-  }
-  .a11y-btn {
-    background: var(--bg3);
-    border: 2px solid var(--border);
-    color: var(--text);
-    border-radius: 30px;
-    padding: 8px 18px;
-    font-size: .92rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 44px;
-    transition: background .18s, border-color .18s;
-  }
+  body { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-size: var(--font-size-base); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+  :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+  .a11y-bar { background: var(--bg2); border-bottom: 2px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  .a11y-label { font-size: .9rem; color: var(--text-muted); font-weight: 600; margin-right: 4px; }
+  .a11y-btn { background: var(--bg3); border: 2px solid var(--border); color: var(--text); border-radius: 30px; padding: 8px 18px; font-size: .92rem; font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 7px; min-height: 44px; transition: background .18s, border-color .18s; }
   .a11y-btn:hover { border-color: var(--sage-light); }
-  .a11y-btn.active {
-    background: var(--sage);
-    border-color: var(--sage-light);
-    color: #fff;
-  }
-
-  /* ── HERO ── */
-  .hero {
-    position: relative;
-    width: 100%;
-    height: 280px;
-    overflow: hidden;
-  }
-  .hero-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center 30%;
-    display: block;
-  }
-  .hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.72) 100%);
-  }
-  .hero-text {
-    position: absolute;
-    bottom: 1.8rem;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    width: 92%;
-    z-index: 2;
-  }
-  .hero-text h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(1.9rem, 5vw, 3rem);
-    color: #fff;
-    text-shadow: 0 2px 14px rgba(0,0,0,0.7);
-    margin-bottom: 0.55rem;
-    line-height: 1.2;
-  }
+  .a11y-btn.active { background: var(--sage); border-color: var(--sage-light); color: #fff; }
+  .hero { position: relative; width: 100%; height: 280px; overflow: hidden; }
+  .hero-img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; display: block; }
+  .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.72) 100%); }
+  .hero-text { position: absolute; bottom: 1.8rem; left: 50%; transform: translateX(-50%); text-align: center; width: 92%; z-index: 2; }
+  .hero-text h1 { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 800; font-size: clamp(1.9rem, 5vw, 3rem); color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,0.7); margin-bottom: 0.55rem; line-height: 1.2; }
   .hero-text h1 span { color: #FFE566; }
-  .hero-text p {
-    color: #fff;
-    font-size: 1.05rem;
-    font-weight: 500;
-    background: rgba(0,0,0,0.45);
-    display: inline-block;
-    padding: 6px 18px;
-    border-radius: 999px;
-    line-height: 1.5;
-  }
-
-  /* ── INFO BANNER ── */
-  .info-banner {
-    background: #1a2a1a;
-    border-bottom: 2px solid rgba(115,151,108,0.5);
-    padding: 20px;
-  }
-  .info-banner-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-  }
-  .info-banner-icon {
-    font-size: 1.6rem;
-    flex-shrink: 0;
-    margin-top: 2px;
-    line-height: 1;
-  }
+  .hero-text p { color: #fff; font-size: 1.05rem; font-weight: 500; background: rgba(0,0,0,0.45); display: inline-block; padding: 6px 18px; border-radius: 999px; line-height: 1.5; }
+  .info-banner { background: #1a2a1a; border-bottom: 2px solid rgba(115,151,108,0.5); padding: 20px; }
+  .info-banner-inner { max-width: 1500px; margin: 0 auto; display: flex; align-items: flex-start; gap: 14px; }
+  .info-banner-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; line-height: 1; }
   .info-banner-text { flex: 1; }
-  .banner-text {
-    font-size: .98rem;
-    color: #e0f0e0;
-    line-height: 1.65;
-    margin: 0;
-  }
+  .banner-text { font-size: .98rem; color: #e0f0e0; line-height: 1.65; margin: 0; }
   .banner-text + .banner-text { margin-top: 6px; }
-  .info-banner-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-    background: var(--sage);
-    color: #fff;
-    text-decoration: none;
-    padding: 11px 22px;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 700;
-    min-height: 44px;
-    transition: background .18s;
-  }
+  .info-banner-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; background: var(--sage); color: #fff; text-decoration: none; padding: 11px 22px; border-radius: 30px; font-size: 1rem; font-weight: 700; min-height: 44px; transition: background .18s; }
   .info-banner-link:hover { background: #5a7d54; }
-
-  /* ── COLOUR KEY ── */
-  .colour-key {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 14px 20px;
-  }
-  .colour-key-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .colour-key-title {
-    font-size: .85rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    margin-bottom: 10px;
-  }
-  .colour-key-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    list-style: none;
-  }
-  .colour-key-item {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: .85rem;
-    color: var(--text);
-    background: var(--bg3);
-    padding: 5px 12px 5px 8px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-  }
-  .colour-key-swatch {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    border: 2px solid rgba(255,255,255,.2);
-  }
-
-  /* ── FILTER BAR ── */
-  .filter-wrap {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(14,14,14,.96);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 2px solid var(--border);
-    padding: 12px 20px;
-  }
-  .filter-label {
-    font-size: .82rem;
-    font-weight: 700;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: .05em;
-    margin-bottom: 8px;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
-  }
-  .filter-scroll {
-    display: flex;
-    gap: 8px;
-    overflow-x: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--bg3) transparent;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding-bottom: 4px;
-  }
+  .colour-key { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 14px 20px; }
+  .colour-key-inner { max-width: 1500px; margin: 0 auto; }
+  .colour-key-title { font-size: .85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+  .colour-key-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+  .colour-key-item { display: flex; align-items: center; gap: 6px; font-size: .85rem; color: var(--text); background: var(--bg3); padding: 5px 12px 5px 8px; border-radius: 20px; border: 1px solid var(--border); }
+  .colour-key-swatch { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; border: 2px solid rgba(255,255,255,.2); }
+  .filter-wrap { position: sticky; top: 0; z-index: 100; background: rgba(14,14,14,.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 2px solid var(--border); padding: 12px 20px; }
+  .filter-label { font-size: .82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; max-width: 1500px; margin-left: auto; margin-right: auto; display: block; }
+  .filter-scroll { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--bg3) transparent; max-width: 1500px; margin: 0 auto; padding-bottom: 4px; }
   .filter-scroll::-webkit-scrollbar { height: 4px; }
   .filter-scroll::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 4px; }
-  .filter-btn {
-    flex-shrink: 0;
-    background: var(--bg3);
-    border: 2px solid var(--border);
-    color: var(--text);
-    border-radius: 30px;
-    padding: 10px 20px;
-    font-size: .92rem;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all .18s;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    min-height: 44px;
-  }
+  .filter-btn { flex-shrink: 0; background: var(--bg3); border: 2px solid var(--border); color: var(--text); border-radius: 30px; padding: 10px 20px; font-size: .92rem; font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 600; cursor: pointer; transition: all .18s; white-space: nowrap; display: flex; align-items: center; gap: 7px; min-height: 44px; }
   .filter-btn:hover { border-color: var(--sage-light); color: var(--sage-light); }
   .filter-btn.active { font-weight: 700; }
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    display: inline-block;
-    border: 2px solid rgba(255,255,255,.3);
-    flex-shrink: 0;
-  }
-
-  /* ── GRID ── */
-  .events-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 70px; }
-  .events-count {
-    font-size: .95rem;
-    color: var(--text-muted);
-    margin-bottom: 22px;
-    padding: 10px 14px;
-    background: var(--bg2);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-  }
+  .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; border: 2px solid rgba(255,255,255,.3); flex-shrink: 0; }
+  .events-wrap { max-width: 1500px; margin: 0 auto; padding: 28px 20px 70px; }
+  .events-count { font-size: .95rem; color: var(--text-muted); margin-bottom: 22px; padding: 10px 14px; background: var(--bg2); border-radius: 10px; border: 1px solid var(--border); }
   .events-count strong { color: #9dd49a; }
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
-    gap: 24px;
-  }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--bg2);
-    border: 2px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform .2s ease, box-shadow .2s ease, border-color .2s;
-    animation: fadeUp .3s ease both;
-  }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 44px rgba(0,0,0,.5);
-    border-color: rgba(115,151,108,.5);
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  /* thick colour band at top */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 24px; }
+  .card { background: var(--bg2); border: 2px solid var(--border); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; transition: transform .2s ease, box-shadow .2s ease, border-color .2s; animation: fadeUp .3s ease both; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 16px 44px rgba(0,0,0,.5); border-color: rgba(115,151,108,.5); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   .card-band { height: 8px; width: 100%; display: block; }
-
-  .card-img {
-    width: 100%;
-    height: 190px;
-    object-fit: cover;
-    display: block;
-  }
-  .card-img-placeholder {
-    height: 190px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-  }
-  .card-body {
-    padding: 20px 22px 18px;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
+  .card-img { width: 100%; height: 190px; object-fit: cover; display: block; }
+  .card-img-placeholder { height: 190px; display: flex; align-items: center; justify-content: center; font-size: 4rem; }
+  .card-body { padding: 20px 22px 18px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
   .tags { display: flex; flex-wrap: wrap; gap: 7px; }
-  .tag {
-    font-size: .8rem;
-    font-weight: 700;
-    letter-spacing: .04em;
-    text-transform: uppercase;
-    padding: 5px 12px;
-    border-radius: 20px;
-    color: #222;
-    line-height: 1.2;
-  }
+  .tag { font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 5px 12px; border-radius: 20px; color: #222; line-height: 1.2; }
   .tag.status-sold-out { background: #e55; color: #fff; }
-  .tag.status-free     { background: #c8e040; color: #222; }
-  .tag.status-booking  { background: #5D79B0; color: #fff; }
-  .tag.status-new      { background: #BC4367; color: #fff; }
-
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.25rem;
-    color: var(--text);
-    line-height: 1.3;
-  }
-  .card-desc {
-    font-size: .95rem;
-    color: var(--text-muted);
-    line-height: 1.65;
-    flex: 1;
-  }
-
-  /* accessibility info box */
-  .card-access {
-    background: var(--bg3);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: .88rem;
-    color: var(--text);
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    border: 1px solid var(--border);
-  }
-  .card-access-heading {
-    font-size: .78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--text-muted);
-    margin-bottom: 2px;
-  }
-  .card-access-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 9px;
-    line-height: 1.5;
-  }
+  .tag.status-free { background: #c8e040; color: #222; }
+  .tag.status-booking { background: #5D79B0; color: #fff; }
+  .tag.status-new { background: #BC4367; color: #fff; }
+  .card-title { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 800; font-size: 1.45rem; color: var(--text); line-height: 1.3; }
+  .card-desc { font-size: .95rem; color: var(--text-muted); line-height: 1.65; flex: 1; }
+  .card-access { background: var(--bg3); border-radius: 10px; padding: 12px 14px; font-size: .88rem; color: var(--text); display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--border); }
+  .card-access-heading { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin-bottom: 2px; }
+  .card-access-row { display: flex; align-items: flex-start; gap: 9px; line-height: 1.5; }
   .card-access-row span:first-child { flex-shrink: 0; font-size: 1rem; }
-
-  /* date / time */
-  .card-meta {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: .92rem;
-    font-weight: 600;
-    color: var(--text);
-    flex-wrap: wrap;
-    padding: 10px 14px;
-    background: var(--bg3);
-    border-radius: 10px;
-    border: 1px solid var(--border);
-  }
+  .card-meta { display: flex; align-items: center; gap: 16px; font-size: .92rem; font-weight: 600; color: var(--text); flex-wrap: wrap; padding: 10px 14px; background: var(--bg3); border-radius: 10px; border: 1px solid var(--border); }
   .card-meta-item { display: flex; align-items: center; gap: 6px; }
-
-  .card-footer {
-    padding: 0 22px 22px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .btn {
-    display: block;
-    width: 100%;
-    padding: 14px 20px;
-    border-radius: 12px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 1rem;
-    font-weight: 700;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border: none;
-    min-height: 48px;
-    transition: opacity .18s, transform .12s;
-    line-height: 1.3;
-  }
+  .card-footer { padding: 0 22px 22px; display: flex; flex-direction: column; gap: 10px; }
+  .btn { display: block; width: 100%; padding: 14px 20px; border-radius: 12px; font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-size: 1rem; font-weight: 700; text-align: center; text-decoration: none; cursor: pointer; border: none; min-height: 48px; transition: opacity .18s, transform .12s; line-height: 1.3; }
   .btn:hover { opacity: .88; transform: translateY(-1px); }
-  .btn-secondary {
-    background: var(--bg3);
-    color: var(--text-muted);
-    border: 2px solid var(--border);
-    cursor: not-allowed;
-  }
-  .btn-listen {
-    background: transparent;
-    border: 2px solid var(--border);
-    color: var(--text-muted);
-    font-size: .88rem;
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    width: 100%;
-    justify-content: center;
-    min-height: 44px;
-    transition: border-color .18s, color .18s, background .18s;
-  }
+  .btn-secondary { background: var(--bg3); color: var(--text-muted); border: 2px solid var(--border); cursor: not-allowed; }
+  .btn-listen { background: transparent; border: 2px solid var(--border); color: var(--text-muted); font-size: .88rem; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 600; display: flex; align-items: center; gap: 7px; width: 100%; justify-content: center; min-height: 44px; transition: border-color .18s, color .18s, background .18s; }
   .btn-listen:hover { border-color: var(--sage-light); color: var(--text); background: rgba(115,151,108,.1); }
   .btn-listen.speaking { border-color: var(--sage); color: var(--sage-light); background: rgba(115,151,108,.15); }
-
-  /* ── EMPTY / LOADING ── */
-  .empty {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-  }
+  .empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); }
   .empty-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
-  .empty h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.5rem;
-    color: var(--text);
-    margin-bottom: 10px;
-  }
+  .empty h3 { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-weight: 800; font-size: 1.5rem; color: var(--text); margin-bottom: 10px; }
   .empty p { font-size: 1rem; }
-
-  .loading {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 60px 20px;
-    color: var(--text-muted);
-    font-size: 1rem;
-  }
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 3px solid var(--border);
-    border-top-color: var(--sage);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 18px;
-  }
+  .loading { grid-column: 1/-1; text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 1rem; }
+  .spinner { width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--sage); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 18px; }
   @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ── FOOTER ── */
-  .footer {
-    text-align: center;
-    padding: 36px 20px;
-    border-top: 2px solid var(--border);
-    color: var(--text-muted);
-    font-size: .95rem;
-    line-height: 1.7;
-  }
+  .footer { text-align: center; padding: 36px 20px; border-top: 2px solid var(--border); color: var(--text-muted); font-size: .95rem; line-height: 1.7; }
   .footer a { color: var(--sage-light); text-decoration: underline; }
   .footer a:hover { color: #fff; }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 640px) {
-    .grid { grid-template-columns: 1fr; }
-    .hero { height: 230px; }
-    .hero-text h1 { font-size: 1.7rem; }
-    .a11y-bar { justify-content: flex-start; }
-    .info-banner-inner { flex-direction: column; }
-    .colour-key-list { gap: 6px; }
-  }
-
-  /* ── REDUCED MOTION ── */
-  @media (prefers-reduced-motion: reduce) {
-    .card { animation: none; }
-    * { transition-duration: 0s !important; }
-  }
+  @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } .hero { height: 230px; } .hero-text h1 { font-size: 1.7rem; } .a11y-bar { justify-content: flex-start; } .info-banner-inner { flex-direction: column; } .colour-key-list { gap: 6px; } .colour-key { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .card { animation: none; } * { transition-duration: 0s !important; } }
 </style>
 </head>
 <body>
 
-<!-- SKIP LINK for keyboard users -->
 <a class="skip-link" href="#events-grid">Skip to events</a>
 
-<!-- ACCESSIBILITY BAR -->
 <div class="a11y-bar" role="toolbar" aria-label="Accessibility options">
   <span class="a11y-label" id="a11y-label">Accessibility:</span>
-  <button class="a11y-btn" id="btn-large-print" onclick="toggleLargePrint()" aria-pressed="false" aria-describedby="a11y-label">
-    🔡 Large Print
-  </button>
-  <button class="a11y-btn" id="btn-contrast" onclick="toggleContrast()" aria-pressed="false" aria-describedby="a11y-label">
-    ◑ High Contrast
-  </button>
+  <button class="a11y-btn" id="btn-large-print" onclick="toggleLargePrint()" aria-pressed="false" aria-describedby="a11y-label">🔡 Large Print</button>
+  <button class="a11y-btn" id="btn-contrast" onclick="toggleContrast()" aria-pressed="false" aria-describedby="a11y-label">◑ High Contrast</button>
 </div>
 
-<!-- HERO -->
 <header class="hero">
   <img class="hero-img" src="hero.png" alt="Safe Soulmates community members enjoying an event together">
   <div class="hero-overlay" aria-hidden="true"></div>
@@ -592,21 +138,19 @@
   </div>
 </header>
 
-<!-- INFO BANNER -->
 <div class="info-banner" role="note" aria-label="About this page">
   <div class="info-banner-inner">
     <div class="info-banner-icon" aria-hidden="true">💡</div>
     <div class="info-banner-text">
       <p class="banner-text"><strong>This page shows new, special, or bookable events only.</strong></p>
       <p class="banner-text">Safe Soulmates runs around <strong>30 events every month</strong> — including regular weekly and monthly Meet Ups across Cambridge, Peterborough, Ely, Huntingdon, St Neots, St Ives and online. You can see all of those on our full events schedule.</p>
-      <a class="info-banner-link" href="https://sites.google.com/d/1pMxv5GSZ2P14zKD_BII0mE7g051xpcN-/p/1k9TUWOQkGuYbTQM-YDgEaBMotSu_I0XL/edit" target="_blank" rel="noopener" aria-label="See all Safe Soulmates events — opens in a new tab">
+      <a class="info-banner-link" href="https://sites.google.com/safesoulmates.org/safe-soulmates-meet-ups/event-schedule-home-page" target="_blank" rel="noopener" aria-label="See all Safe Soulmates events — opens in a new tab">
         🗓️ See ALL our events here
       </a>
     </div>
   </div>
 </div>
 
-<!-- COLOUR KEY -->
 <div class="colour-key" aria-label="Colour guide for event locations">
   <div class="colour-key-inner">
     <p class="colour-key-title" id="colour-key-heading">Colour guide — each location has its own colour:</p>
@@ -625,11 +169,9 @@
   </div>
 </div>
 
-<!-- FILTER BAR -->
 <nav class="filter-wrap" aria-label="Filter events by location">
   <span class="filter-label" id="filter-label">Filter by location:</span>
   <div class="filter-scroll" role="list" aria-labelledby="filter-label">
-    <button class="filter-btn active" data-filter="all" onclick="setFilter('all')" role="listitem" aria-pressed="true">🗓️ All Events</button>
     <button class="filter-btn" data-filter="Cambridge"    onclick="setFilter('Cambridge')"    role="listitem" aria-pressed="false"><span class="dot" style="background:#F5DDE5;border-color:#B84666" aria-hidden="true"></span> Cambridge</button>
     <button class="filter-btn" data-filter="Peterborough" onclick="setFilter('Peterborough')" role="listitem" aria-pressed="false"><span class="dot" style="background:#CDD2CC;border-color:#555e56" aria-hidden="true"></span> Peterborough</button>
     <button class="filter-btn" data-filter="Online"       onclick="setFilter('Online')"       role="listitem" aria-pressed="false"><span class="dot" style="background:#DDE5F2;border-color:#5D79B0" aria-hidden="true"></span> Online</button>
@@ -640,10 +182,10 @@
     <button class="filter-btn" data-filter="St Ives"      onclick="setFilter('St Ives')"      role="listitem" aria-pressed="false"><span class="dot" style="background:#D0EEE4;border-color:#4A9878" aria-hidden="true"></span> St Ives</button>
     <button class="filter-btn" data-filter="Day Trips"    onclick="setFilter('Day Trips')"    role="listitem" aria-pressed="false"><span class="dot" style="background:#F0E8D5;border-color:#9A7848" aria-hidden="true"></span> Day Trips</button>
     <button class="filter-btn" data-filter="March"        onclick="setFilter('March')"        role="listitem" aria-pressed="false"><span class="dot" style="background:#F0D8D8;border-color:#B84040" aria-hidden="true"></span> March</button>
+    <button class="filter-btn active" data-filter="all"   onclick="setFilter('all')"          role="listitem" aria-pressed="true">🗓️ See All Events</button>
   </div>
 </nav>
 
-<!-- EVENTS -->
 <main class="events-wrap" id="main-content">
   <p class="events-count" id="events-count" aria-live="polite" aria-atomic="true"></p>
   <div class="grid" id="events-grid" role="list" aria-label="Events list">
@@ -654,88 +196,61 @@
   </div>
 </main>
 
-<!-- FOOTER -->
+<div id="event-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" style="display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.82);overflow-y:auto;padding:20px 16px 40px;align-items:center;justify-content:center;">
+  <div id="modal-inner" style="max-width:680px;width:100%;margin:auto;background:var(--bg2);border-radius:20px;overflow:hidden;position:relative;border:2px solid var(--border);">
+    <button onclick="closeModal()" aria-label="Close event details" style="position:absolute;top:14px;right:14px;z-index:10;background:rgba(0,0,0,.6);border:2px solid var(--border);color:#fff;border-radius:50%;width:40px;height:40px;font-size:1.3rem;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;">✕</button>
+    <div id="modal-band" style="height:10px;width:100%;"></div>
+    <div id="modal-img-wrap"></div>
+    <div style="padding:24px 28px 10px;">
+      <div id="modal-tags" style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"></div>
+      <h2 id="modal-title" style="font-family:'Atkinson Hyperlegible Next','Atkinson Hyperlegible',Arial,sans-serif;font-weight:800;font-size:2.1rem;color:var(--text);line-height:1.2;margin-bottom:10px;"></h2>
+      <p id="modal-desc" style="font-size:1rem;color:var(--text-muted);line-height:1.7;margin-bottom:14px;"></p>
+      <div id="modal-access" style="background:var(--bg3);border-radius:12px;padding:14px 16px;margin-bottom:14px;border:1px solid var(--border);display:none;">
+        <p style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:8px;">Accessibility &amp; Info</p>
+        <div id="modal-access-rows"></div>
+      </div>
+      <div id="modal-meta" style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;padding:12px 16px;background:var(--bg3);border-radius:12px;border:1px solid var(--border);margin-bottom:20px;font-size:1rem;font-weight:600;color:var(--text);"></div>
+    </div>
+    <div style="padding:0 28px 28px;display:flex;flex-direction:column;gap:10px;">
+      <div id="modal-btn"></div>
+      <button class="btn-listen" id="modal-listen-btn" onclick="speakModal()" aria-label="Listen to this event">🔊 Listen to this event</button>
+    </div>
+  </div>
+</div>
+
 <footer class="footer">
   <p>Questions? Get in touch with the Safe Soulmates team. 💚</p>
   <p style="margin-top:6px; font-size:.88rem;">Events update automatically from our events sheet.</p>
   <p style="margin-top:10px;">
-    <a href="https://sites.google.com/d/1pMxv5GSZ2P14zKD_BII0mE7g051xpcN-/p/1k9TUWOQkGuYbTQM-YDgEaBMotSu_I0XL/edit" target="_blank" rel="noopener">
-      View all Safe Soulmates events →
-    </a>
+    <a href="https://sites.google.com/safesoulmates.org/safe-soulmates-meet-ups/event-schedule-home-page" target="_blank" rel="noopener">View all Safe Soulmates events →</a>
   </p>
 </footer>
 
 <script>
   const SHEET_ID   = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
-  const SHEET_NAME = 'Sheet1';
+  const SHEET_NAME = 'For Events';
 
-  // Safe Soulmates brand colours:
-  // Green #5c9464 | Grey #CDD2CC | Pink #B84666 | Dark grey #555e56 | Cream #f7f5e8
-  // Location colours use brand palette — band = button/stripe colour, bg = pale tint
   const locationColours = {
-    // Cambridge — pale pink (brand pink tint)
     'cambridge':          { band: '#B84666', bg: '#F5DDE5' },
-    // Online — pale blue (brand grey-blue tint)
     'online':             { band: '#5D79B0', bg: '#DDE5F2' },
-    // Ely — green (brand green)
     'ely':                { band: '#5c9464', bg: '#D8EDD9' },
-    // Huntingdon — purple
     'huntingdon':         { band: '#7A5CA8', bg: '#E8E0F5' },
-    // Peterborough — grey (brand grey)
     'peterborough':       { band: '#555e56', bg: '#CDD2CC' },
-    // St Neots — warm yellow
     'st neots':           { band: '#A89828', bg: '#F5F0C0' },
-    // St Ives — greenish (lighter brand green)
     'st ives':            { band: '#4A9878', bg: '#D0EEE4' },
-    // March — reddish
     'march':              { band: '#B84040', bg: '#F0D8D8' },
-    // Day trips / day out — warm beige
     'day trips':          { band: '#9A7848', bg: '#F0E8D5' },
     'wells by the sea':   { band: '#9A7848', bg: '#F0E8D5' },
     'milton keynes':      { band: '#9A7848', bg: '#F0E8D5' },
-    // Oliver McGowan — dark orange-brown
     'oliver mcgowan':     { band: '#7A3010', bg: '#E8C4A0' },
     'oliver mcgowan mandatory training': { band: '#7A3010', bg: '#E8C4A0' },
   };
 
-  // City keywords in priority order — checked against venue/location/tags strings
   const cityKeywords = [
     'oliver mcgowan', 'wells by the sea', 'milton keynes',
     'st neots', 'st ives', 'cambridge', 'peterborough',
     'huntingdon', 'online', 'ely', 'march', 'day trips',
   ];
-
-  // Known Cambridge venues that don't contain the word "cambridge"
-  // Add any venue names here that should map to a specific city colour
-  const venueToCity = {
-    'cherry hinton':   'cambridge',
-    'junction':        'cambridge',
-    'red lion':        'cambridge',
-    'corn exchange':   'cambridge',
-    'parker':          'cambridge',
-    'fitzwilliam':     'cambridge',
-    'grafton':         'cambridge',
-    'cineworld':       'cambridge',
-    'arts theatre':    'cambridge',
-    'jesus green':     'cambridge',
-    'midsummer':       'cambridge',
-    'arbury':          'cambridge',
-    'romsey':          'cambridge',
-    'chesterton':      'cambridge',
-    'kettle':          'cambridge',
-    'gaming cafe':     'cambridge',
-    'hinton':          'cambridge',
-    'out out club':    'st ives',
-    'ferry meadows':   'peterborough',
-    'queensgate':      'peterborough',
-    'werrington':      'peterborough',
-    'the manor':       'huntingdon',
-    'great fen':       'huntingdon',
-    'priory':          'st neots',
-    'zoom':            'online',
-    'teams':           'online',
-    'google meet':     'online',
-  };
 
   const locationEmojis = {
     'cambridge':'🌉','online':'💻','ely':'⛪','huntingdon':'🦌',
@@ -748,71 +263,57 @@
 
   function parseDate(dateStr) {
     if (!dateStr) return new Date(9999, 0, 1);
-    const cleaned = dateStr.toString().replace(/(\d+)(st|nd|rd|th)/i, '$1');
+    const cleaned = dateStr.toString().replace(/(\d+)(st|nd|rd|th)/gi, '$1').trim();
+    const months = { january:1,february:2,march:3,april:4,may:5,june:6, july:7,august:8,september:9,october:10,november:11,december:12, jan:1,feb:2,mar:3,apr:4,jun:6,jul:7,aug:8,sep:9,oct:10,nov:11,dec:12 };
+    const m = cleaned.match(/^(\d{1,2})\s+([a-zA-Z]+)(?:\s+(\d{4}))?$/);
+    if (m) {
+      const day = parseInt(m[1]); const month = months[m[2].toLowerCase()]; const year = m[3] ? parseInt(m[3]) : new Date().getFullYear();
+      if (month) return new Date(year, month - 1, day);
+    }
     const d = new Date(cleaned);
     return isNaN(d.getTime()) ? new Date(9999, 0, 1) : d;
   }
 
-  // Robust colour lookup — 4 levels:
-  // 1. Exact match on location string
-  // 2. Location string contains a city keyword (e.g. "Junction Cambridge")
-  // 3. Location string contains a known venue name (e.g. "Cherry Hinton Hall")
-  // 4. Tags column contains a city keyword
-  // 5. Grey fallback
   function getLocColours(location, tags) {
-    const key     = (location || '').toLowerCase().trim();
-    const tagsKey = (tags     || '').toLowerCase().trim();
-
-    // 1. Exact match
+    const key = (location || '').toLowerCase().trim();
+    const tagsKey = (tags || '').toLowerCase().trim();
     if (locationColours[key]) return locationColours[key];
-
-    // 2. Location contains a city keyword
-    for (const city of cityKeywords) {
-      if (key.includes(city)) return locationColours[city] || { band: '#555e56', bg: '#CDD2CC' };
-    }
-
-    // 3. Location contains a known venue fragment
-    for (const [venue, city] of Object.entries(venueToCity)) {
-      if (key.includes(venue)) return locationColours[city] || { band: '#555e56', bg: '#CDD2CC' };
-    }
-
-    // 4. Tags contain a city keyword
-    for (const city of cityKeywords) {
-      if (tagsKey.includes(city)) return locationColours[city] || { band: '#555e56', bg: '#CDD2CC' };
-    }
-
-    // 5. Fallback grey
+    for (const city of cityKeywords) { if (key.includes(city)) return locationColours[city] || { band: '#555e56', bg: '#CDD2CC' }; }
+    for (const city of cityKeywords) { if (tagsKey.includes(city)) return locationColours[city] || { band: '#555e56', bg: '#CDD2CC' }; }
     return { band: '#555e56', bg: '#CDD2CC' };
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0`;
+    const COLS = ['event name','date','time','location','description','tags','button text','button link','image url','status','accessibility notes','sensory info','transport info','cost','booking required','contact'];
     try {
-      const res  = await fetch(url);
+      const res = await fetch(url);
       const text = await res.text();
-      const json = JSON.parse(text.substring(47, text.length - 2));
-      const rows = json.table.rows;
-      const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
-      allEvents = rows
-        .map(row => {
-          const obj = {};
-          cols.forEach((col, i) => {
-            const cell = row.c[i];
-            obj[col] = cell ? (cell.f || cell.v || '') : '';
-          });
-          return obj;
-        })
-        .filter(e => e['event name'] && e['event name'].toString().trim() !== '');
-
+      const start = text.indexOf('{'); const end = text.lastIndexOf('}');
+      if (start === -1 || end === -1) throw new Error('No JSON in response');
+      const json = JSON.parse(text.slice(start, end + 1));
+      if (!json.table || !json.table.rows) throw new Error('No table data');
+      let rows = json.table.rows;
+      if (rows.length > 0) {
+        const first = rows[0].c && rows[0].c[0];
+        const val = first ? String(first.f || first.v || '').toLowerCase().trim() : '';
+        if (val === 'event name') rows = rows.slice(1);
+      }
+      allEvents = rows.map(row => {
+        const obj = {};
+        COLS.forEach((col, i) => { const cell = row.c ? row.c[i] : null; obj[col] = cell ? String(cell.f || cell.v || '').trim() : ''; });
+        return obj;
+      }).filter(e => (e['event name'] || '').trim().length > 1);
+      const today = new Date(); today.setHours(0,0,0,0);
+      allEvents = allEvents.filter(e => {
+        const hasYear = /\b\d{4}\b/.test(e['date'] || '');
+        if (!hasYear) return true;
+        return parseDate(e['date']) >= today;
+      });
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
-    } catch (err) {
-      document.getElementById('events-grid').innerHTML = `
-        <div class="empty" role="alert">
-          <span class="empty-icon" aria-hidden="true">⚠️</span>
-          <h3>Couldn't load events right now</h3>
-          <p>Please try refreshing the page. If the problem continues, get in touch with the team.</p>
-        </div>`;
+    } catch(err) {
+      document.getElementById('events-grid').innerHTML = `<div class="empty" role="alert"><span class="empty-icon" aria-hidden="true">⚠️</span><h3>Couldn't load events right now</h3><p>Please try refreshing the page. If the problem continues, get in touch with the team.</p></div>`;
       console.error(err);
     }
   }
@@ -825,120 +326,62 @@
       b.setAttribute('aria-pressed', String(isActive));
       if (isActive && filter !== 'all' && filter !== 'Other Events of Interest') {
         const c = getLocColours(filter, filter);
-        b.style.background   = c.band;
-        b.style.borderColor  = c.band;
-        b.style.color        = '#fff';
-      } else {
-        b.style.background  = '';
-        b.style.borderColor = '';
-        b.style.color       = '';
-      }
+        b.style.background = c.band; b.style.borderColor = c.band; b.style.color = '#fff';
+      } else { b.style.background = ''; b.style.borderColor = ''; b.style.color = ''; }
     });
     renderEvents();
   }
 
   function renderEvents() {
-    const grid    = document.getElementById('events-grid');
+    const grid = document.getElementById('events-grid');
     const countEl = document.getElementById('events-count');
-
     let filtered = allEvents;
     if (currentFilter !== 'all') {
       filtered = allEvents.filter(e =>
         (e['location'] || '').toLowerCase().includes(currentFilter.toLowerCase()) ||
-        (e['tags']     || '').toLowerCase().includes(currentFilter.toLowerCase())
+        (e['tags'] || '').toLowerCase().includes(currentFilter.toLowerCase())
       );
     }
-
     const filterLabel = currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : '';
-    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${filterLabel} — sorted by earliest date first`;
-
+    countEl.innerHTML = `Showing <strong>${filtered.length}</strong> event${filtered.length !== 1 ? 's' : ''}${filterLabel} — earliest date first (on wider screens, read left to right)`;
     if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="empty">
-          <span class="empty-icon" aria-hidden="true">🔍</span>
-          <h3>No events found</h3>
-          <p>There are no events in this area right now. Try a different filter or check back soon!</p>
-        </div>`;
+      grid.innerHTML = `<div class="empty"><span class="empty-icon" aria-hidden="true">🔍</span><h3>No events found</h3><p>There are no events in this area right now. Try a different filter or check back soon!</p></div>`;
       return;
     }
-    grid.innerHTML = filtered.map((e, i) => buildCard(e, i)).join('');
+    grid.innerHTML = filtered.map((e, i) => buildCard(e, allEvents.indexOf(e), i)).join('');
   }
 
-  function buildCard(e, i) {
-    const name        = (e['event name'] || '').toString();
-    const date        = (e['date']       || '').toString();
-    const time        = (e['time']       || '').toString();
-    const location    = (e['location']   || '').toString();
-    const description = (e['description']|| '').toString();
-    const tags        = (e['tags']       || '').toString();
-    const btnText     = (e['button text']|| 'Find Out More').toString();
-    const btnLink     = (e['button link']|| '#').toString();
-    const imageUrl    = (e['image url']  || '').toString();
-    const status      = (e['status']     || '').toString().trim();
-    const accessNotes = (e['accessibility notes'] || '').toString();
-    const sensory     = (e['sensory info']         || '').toString();
-    const transport   = (e['transport info']        || '').toString();
-    const cost        = (e['cost']                  || '').toString();
-    const booking     = (e['booking required']      || '').toString();
-    const contact     = (e['contact']               || '').toString();
-
-    const colours  = getLocColours(location, tags);
-    // Debug: uncomment the line below to see location values in browser console
-    // console.log('Event:', name, '| Location:', location, '| Tags:', tags, '| Colour:', colours.band);
-    const locKey   = location.toLowerCase();
-    const locEmoji = locationEmojis[locKey] || '📍';
-
-    const safeImg = imageUrl.replace(/'/g, '%27');
+  function buildCard(e, idx, i) {
+    const name = (e['event name']||'').toString(); const date = (e['date']||'').toString(); const time = (e['time']||'').toString();
+    const location = (e['location']||'').toString(); const description = (e['description']||'').toString(); const tags = (e['tags']||'').toString();
+    const btnText = (e['button text']||'Find Out More').toString(); const btnLink = (e['button link']||'#').toString();
+    const imageUrl = (e['image url']||'').toString(); const status = (e['status']||'').toString().trim();
+    const accessNotes = (e['accessibility notes']||'').toString(); const sensory = (e['sensory info']||'').toString();
+    const transport = (e['transport info']||'').toString(); const cost = (e['cost']||'').toString();
+    const booking = (e['booking required']||'').toString(); const contact = (e['contact']||'').toString();
+    const colours = getLocColours(location, tags); const locKey = location.toLowerCase(); const locEmoji = locationEmojis[locKey] || '📍';
     const imgHtml = imageUrl
-      ? `<img class="card-img" src="${imageUrl}" alt="${name} event image" loading="lazy"
-           onerror="this.parentNode.innerHTML='<div class=card-img-placeholder style=background:${colours.bg} aria-hidden=true>${locEmoji}</div>'">`
+      ? `<img class="card-img" src="${imageUrl}" alt="${name} event image" loading="lazy" onerror="this.outerHTML='<div class=card-img-placeholder style=background:${colours.bg} aria-hidden=true>${locEmoji}</div>'">`
       : `<div class="card-img-placeholder" style="background:${colours.bg}" aria-hidden="true">${locEmoji}</div>`;
-
-    const locTag    = location ? `<span class="tag" style="background:${colours.bg};color:#222">${location}</span>` : '';
-    const extraTags = tags ? tags.split(',').map(t =>
-      `<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`
-    ).join('') : '';
-    const statusKey = status.toLowerCase().replace(/\s+/g, '-');
+    const locTag = location ? `<span class="tag" style="background:${colours.bg};color:#222">${location}</span>` : '';
+    const extraTags = tags ? tags.split(',').map(t => `<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`).join('') : '';
+    const statusKey = status.toLowerCase().replace(/\s+/g,'-');
     const statusTag = status ? `<span class="tag status-${statusKey}">${status}</span>` : '';
-    const costTag   = cost   ? `<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>` : '';
-
+    const costTag = cost ? `<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>` : '';
     const accessRows = [
       accessNotes ? `<div class="card-access-row"><span aria-hidden="true">♿</span><span>${accessNotes}</span></div>` : '',
-      sensory     ? `<div class="card-access-row"><span aria-hidden="true">🔊</span><span>${sensory}</span></div>`     : '',
-      transport   ? `<div class="card-access-row"><span aria-hidden="true">🚌</span><span>${transport}</span></div>`   : '',
+      sensory ? `<div class="card-access-row"><span aria-hidden="true">🔊</span><span>${sensory}</span></div>` : '',
+      transport ? `<div class="card-access-row"><span aria-hidden="true">🚌</span><span>${transport}</span></div>` : '',
       booking === 'Yes' ? `<div class="card-access-row"><span aria-hidden="true">🎟️</span><span>Booking required</span></div>` : '',
-      contact     ? `<div class="card-access-row"><span aria-hidden="true">💬</span><span>Contact: ${contact}</span></div>` : '',
+      contact ? `<div class="card-access-row"><span aria-hidden="true">💬</span><span>Contact: ${contact}</span></div>` : '',
     ].filter(Boolean).join('');
-    const accessBlock = accessRows
-      ? `<div class="card-access" aria-label="Accessibility and booking information">
-           <p class="card-access-heading" aria-hidden="true">Accessibility &amp; Info</p>
-           ${accessRows}
-         </div>`
-      : '';
-
-    const metaItems = [
-      date ? `<span class="card-meta-item"><span aria-hidden="true">📅</span> <span>${date}</span></span>` : '',
-      time ? `<span class="card-meta-item"><span aria-hidden="true">🕐</span> <span>${time}</span></span>` : '',
-    ].filter(Boolean).join('');
-    const metaHtml = metaItems
-      ? `<div class="card-meta" aria-label="Date and time">${metaItems}</div>`
-      : '';
-
-    const listenText = [
-      name,
-      date        ? `Date: ${date}.`         : '',
-      time        ? `Time: ${time}.`         : '',
-      location    ? `Location: ${location}.` : '',
-      description,
-      accessNotes ? `Accessibility: ${accessNotes}.` : '',
-      transport   ? `Transport: ${transport}.`        : '',
-      booking === 'Yes' ? 'Booking is required.' : '',
-    ].filter(Boolean).join(' ').replace(/`/g, "'");
-
+    const accessBlock = accessRows ? `<div class="card-access" aria-label="Accessibility and booking information"><p class="card-access-heading" aria-hidden="true">Accessibility &amp; Info</p>${accessRows}</div>` : '';
+    const metaItems = [date ? `<span class="card-meta-item"><span aria-hidden="true">📅</span> <span>${date}</span></span>` : '', time ? `<span class="card-meta-item"><span aria-hidden="true">🕐</span> <span>${time}</span></span>` : ''].filter(Boolean).join('');
+    const metaHtml = metaItems ? `<div class="card-meta" aria-label="Date and time">${metaItems}</div>` : '';
+    const listenText = [name, date?`Date: ${date}.`:'', time?`Time: ${time}.`:'', location?`Location: ${location}.`:'', description, accessNotes?`Accessibility: ${accessNotes}.`:'', transport?`Transport: ${transport}.`:'', booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ').replace(/`/g,"'");
     const delay = Math.min(i * 0.05, 0.4);
-
     return `
-      <article class="card" role="listitem" style="animation-delay:${delay}s" aria-label="${name}${date ? ', ' + date : ''}${location ? ', ' + location : ''}">
+      <article class="card" role="listitem" style="animation-delay:${delay}s;cursor:pointer" aria-label="${name}${date?', '+date:''}${location?', '+location:''}" onclick="openModal(${idx})" tabindex="0" onkeydown="if(event.key==='Enter')openModal(${idx})">
         <span class="card-band" style="background:${colours.band}" aria-hidden="true"></span>
         ${imgHtml}
         <div class="card-body">
@@ -952,52 +395,101 @@
           ${btnLink && btnLink !== '#'
             ? `<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText} — ${name} (opens in new tab)">${btnText}</a>`
             : `<button class="btn btn-secondary" disabled aria-disabled="true">${btnText}</button>`}
-          <button class="btn-listen" id="listen-${i}" onclick="speakEvent(this, \`${listenText}\`)" aria-label="Listen to details for ${name}">
-            🔊 Listen to this event
-          </button>
+          <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this, \`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
         </div>
       </article>`;
   }
 
-  let currentBtn = null;
-  let currentUtterance = null;
+  function openModal(idx) {
+    const e = allEvents[idx]; if (!e) return;
+    const name=(e['event name']||'').toString(); const date=(e['date']||'').toString(); const time=(e['time']||'').toString();
+    const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const tags=(e['tags']||'').toString();
+    const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'').toString();
+    const imageUrl=(e['image url']||'').toString(); const status=(e['status']||'').toString().trim();
+    const accessNotes=(e['accessibility notes']||'').toString(); const sensory=(e['sensory info']||'').toString();
+    const transport=(e['transport info']||'').toString(); const cost=(e['cost']||'').toString();
+    const booking=(e['booking required']||'').toString(); const contact=(e['contact']||'').toString();
+    const colours=getLocColours(location,tags); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
+    document.getElementById('modal-band').style.background=colours.band;
+    document.getElementById('modal-title').textContent=name;
+    document.getElementById('modal-desc').textContent=description;
+    document.getElementById('modal-desc').style.display=description?'':'none';
+    const imgWrap=document.getElementById('modal-img-wrap');
+    if (imageUrl) {
+      const img=document.createElement('img'); img.src=imageUrl; img.alt=name;
+      img.style.cssText='width:100%;height:260px;object-fit:cover;display:block;';
+      img.onerror=()=>{imgWrap.innerHTML=`<div style="height:260px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:${colours.bg}">${locEmoji}</div>`;};
+      imgWrap.innerHTML=''; imgWrap.appendChild(img);
+    } else { imgWrap.innerHTML=`<div style="height:260px;display:flex;align-items:center;justify-content:center;font-size:5rem;background:${colours.bg}">${locEmoji}</div>`; }
+    let tagsHtml=location?`<span class="tag" style="background:${colours.bg};color:#222">${location}</span>`:'';
+    if(tags) tagsHtml+=tags.split(',').map(t=>`<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`).join('');
+    if(status){const sk=status.toLowerCase().replace(/\s+/g,'-');tagsHtml+=`<span class="tag status-${sk}">${status}</span>`;}
+    if(cost) tagsHtml+=`<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>`;
+    document.getElementById('modal-tags').innerHTML=tagsHtml;
+    const accessRows=[
+      accessNotes?`<div class="card-access-row"><span>♿</span><span>${accessNotes}</span></div>`:'',
+      sensory?`<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>`:'',
+      transport?`<div class="card-access-row"><span>🚌</span><span>${transport}</span></div>`:'',
+      booking==='Yes'?`<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>`:'',
+      contact?`<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>`:'',
+    ].filter(Boolean).join('');
+    const accessEl=document.getElementById('modal-access');
+    document.getElementById('modal-access-rows').innerHTML=accessRows;
+    accessEl.style.display=accessRows?'':'none';
+    const metaEl=document.getElementById('modal-meta');
+    const metaItems=[date?`<span style="display:flex;align-items:center;gap:6px">📅 ${date}</span>`:'', time?`<span style="display:flex;align-items:center;gap:6px">🕐 ${time}</span>`:''].filter(Boolean).join('');
+    metaEl.innerHTML=metaItems; metaEl.style.display=metaItems?'':'none';
+    document.getElementById('modal-btn').innerHTML=btnLink
+      ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText}</a>`
+      :`<button class="btn btn-secondary" disabled>${btnText}</button>`;
+    modalListenText=[name,date?`Date: ${date}.`:'',time?`Time: ${time}.`:'',location?`Location: ${location}.`:'',description,accessNotes?`Accessibility: ${accessNotes}.`:'',transport?`Transport: ${transport}.`:'',booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ');
+    document.getElementById('modal-listen-btn').classList.remove('speaking');
+    const modal=document.getElementById('event-modal');
+    modal.style.display='flex'; document.body.style.overflow='hidden'; modal.scrollTop=0;
+  }
 
-  function speakEvent(btn, text) {
-    if (currentUtterance) {
-      window.speechSynthesis.cancel();
-      if (currentBtn) currentBtn.classList.remove('speaking');
-      if (currentBtn === btn) { currentUtterance = null; currentBtn = null; return; }
-    }
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.88;
-    utter.pitch = 1;
-    utter.onend = () => {
-      currentUtterance = null;
-      currentBtn = null;
-      btn.classList.remove('speaking');
-    };
-    currentUtterance = utter;
-    currentBtn = btn;
-    btn.classList.add('speaking');
-    window.speechSynthesis.speak(utter);
+  let modalListenText='';
+  function speakModal() {
+    const btn=document.getElementById('modal-listen-btn');
+    if(currentUtterance){window.speechSynthesis.cancel();if(currentBtn)currentBtn.classList.remove('speaking');currentUtterance=null;currentBtn=null;btn.classList.remove('speaking');return;}
+    const utter=new SpeechSynthesisUtterance(modalListenText);
+    utter.rate=0.88;utter.pitch=1;
+    utter.onend=()=>{currentUtterance=null;currentBtn=null;btn.classList.remove('speaking');};
+    currentUtterance=utter;currentBtn=btn;btn.classList.add('speaking');window.speechSynthesis.speak(utter);
+  }
+
+  function closeModal() {
+    window.speechSynthesis.cancel();
+    if(currentBtn){currentBtn.classList.remove('speaking');currentBtn=null;}
+    currentUtterance=null;
+    document.getElementById('event-modal').style.display='none';
+    document.body.style.overflow='';
+  }
+
+  document.getElementById('event-modal').addEventListener('click',function(ev){if(ev.target===this)closeModal();});
+  document.addEventListener('keydown',function(ev){if(ev.key==='Escape')closeModal();});
+
+  let currentBtn=null; let currentUtterance=null;
+  function speakEvent(btn,text) {
+    if(currentUtterance){window.speechSynthesis.cancel();if(currentBtn)currentBtn.classList.remove('speaking');if(currentBtn===btn){currentUtterance=null;currentBtn=null;return;}}
+    const utter=new SpeechSynthesisUtterance(text);utter.rate=0.88;utter.pitch=1;
+    utter.onend=()=>{currentUtterance=null;currentBtn=null;btn.classList.remove('speaking');};
+    currentUtterance=utter;currentBtn=btn;btn.classList.add('speaking');window.speechSynthesis.speak(utter);
   }
 
   function toggleLargePrint() {
-    const btn = document.getElementById('btn-large-print');
+    const btn=document.getElementById('btn-large-print');
     document.body.classList.toggle('large-print');
-    const on = document.body.classList.contains('large-print');
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-pressed', String(on));
-    btn.textContent = on ? '🔡 Large Print: On' : '🔡 Large Print';
+    const on=document.body.classList.contains('large-print');
+    btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));
+    btn.textContent=on?'🔡 Large Print: On':'🔡 Large Print';
   }
-
   function toggleContrast() {
-    const btn = document.getElementById('btn-contrast');
+    const btn=document.getElementById('btn-contrast');
     document.body.classList.toggle('high-contrast');
-    const on = document.body.classList.contains('high-contrast');
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-pressed', String(on));
-    btn.textContent = on ? '◑ High Contrast: On' : '◑ High Contrast';
+    const on=document.body.classList.contains('high-contrast');
+    btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));
+    btn.textContent=on?'◑ High Contrast: On':'◑ High Contrast';
   }
 
   loadEvents();
