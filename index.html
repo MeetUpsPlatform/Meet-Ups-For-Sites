@@ -36,7 +36,7 @@
   .skip-link { position: absolute; top: -100px; left: 16px; background: var(--focus); color: #000; font-weight: 700; padding: 10px 20px; border-radius: 8px; font-size: 1rem; z-index: 9999; text-decoration: none; transition: top .15s; }
   .skip-link:focus { top: 16px; }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-size: var(--font-size-base); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; }
+  body { font-family: 'Atkinson Hyperlegible Next', 'Atkinson Hyperlegible', Arial, sans-serif; font-size: var(--font-size-base); background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.6; overflow-x: hidden; position: relative; }
   :focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
   .a11y-bar { background: var(--bg2); border-bottom: 2px solid var(--border); padding: 10px 20px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
   .a11y-label { font-size: .9rem; color: var(--text-muted); font-weight: 600; margin-right: 4px; }
@@ -197,7 +197,7 @@
 </main>
 
 <style>
-  #event-modal { display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,0,0,.85); overflow-y:auto; padding:30px 20px; align-items:flex-start; justify-content:center; }
+  #event-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:1000; background:rgba(0,0,0,.85); overflow-y:auto; padding:30px 20px; align-items:flex-start; justify-content:center; }
   #modal-inner { max-width:1200px; width:100%; margin:auto; background:var(--bg2); border-radius:24px; overflow:hidden; position:relative; border:2px solid var(--border); display:grid; grid-template-columns:1fr 1fr; }
   #modal-img-col { position:relative; min-height:580px; }
   #modal-img-col img, #modal-img-col > div { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:flex; align-items:center; justify-content:center; font-size:6rem; }
@@ -461,6 +461,10 @@
     document.getElementById('modal-listen-btn').classList.remove('speaking');
     const modal=document.getElementById('event-modal');
     modal.style.display='flex'; document.body.style.overflow='hidden'; modal.scrollTop=0;
+    // Try to scroll parent (Google Sites) to top so fixed modal is visible
+    try { window.top.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) {}
+    try { window.parent.scrollTo({ top: 0, behavior: 'smooth' }); } catch(e) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   let modalListenText='';
