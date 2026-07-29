@@ -299,7 +299,7 @@
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=0&headers=1`;
     const COLS = ['event name','date','time','location','description','tags','button text','button link','image url','status','accessibility notes','sensory info','transport info','cost','booking required','contact'];
     try {
       const res = await fetch(url);
@@ -308,17 +308,18 @@
       if (start === -1 || end === -1) throw new Error('No JSON in response');
       const json = JSON.parse(text.slice(start, end + 1));
       if (!json.table || !json.table.rows) throw new Error('No table data');
-      let rows = json.table.rows;
-      if (rows.length > 0) {
-        const first = rows[0].c && rows[0].c[0];
-        const val = first ? String(first.f || first.v || '').toLowerCase().trim() : '';
-        if (val === 'event name') rows = rows.slice(1);
-      }
+      const rows = json.table.rows;
       allEvents = rows.map(row => {
         const obj = {};
-        COLS.forEach((col, i) => { const cell = row.c ? row.c[i] : null; obj[col] = cell ? String(cell.f || cell.v || '').trim() : ''; });
+        COLS.forEach((col, i) => {
+          const cell = row.c ? row.c[i] : null;
+          obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
+        });
         return obj;
-      }).filter(e => (e['event name'] || '').trim().length > 1);
+      }).filter(e => {
+        const name = (e['event name'] || '').trim();
+        return name.length > 1 && name.toLowerCase() !== 'event name';
+      });
       // No automatic past event filtering — manage manually in the sheet
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
