@@ -319,12 +319,7 @@
         COLS.forEach((col, i) => { const cell = row.c ? row.c[i] : null; obj[col] = cell ? String(cell.f || cell.v || '').trim() : ''; });
         return obj;
       }).filter(e => (e['event name'] || '').trim().length > 1);
-      const today = new Date(); today.setHours(0,0,0,0);
-      allEvents = allEvents.filter(e => {
-        const hasYear = /\b\d{4}\b/.test(e['date'] || '');
-        if (!hasYear) return true;
-        return parseDate(e['date']) >= today;
-      });
+      // No automatic past event filtering — manage manually in the sheet
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
     } catch(err) {
