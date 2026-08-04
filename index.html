@@ -398,7 +398,7 @@
 
 <script>
   const SHEET_ID   = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
-  const SHEET_NAME = 'For Events';
+  const SHEET_GID  = '0'; // numeric ID of the "For Events" tab
 
   const locationColours = {
     'cambridge':          { band: '#B84666', bg: '#F5DDE5' },
@@ -452,7 +452,7 @@
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
     try {
       const res  = await fetch(url);
       const text = await res.text();
