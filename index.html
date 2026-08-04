@@ -398,7 +398,7 @@
 
 <script>
   const SHEET_ID   = '1eO53B-vq5IksXtB93cEPuHKrin45FKLvqOfBuTtd9yo';
-  const SHEET_GID  = '0'; // numeric ID of the "For Events" tab
+  const SHEET_NAME = 'For Events'; // name of the tab in Google Sheets
 
   const locationColours = {
     'cambridge':          { band: '#B84666', bg: '#F5DDE5' },
@@ -452,11 +452,15 @@
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&gid=${SHEET_GID}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
     try {
       const res  = await fetch(url);
       const text = await res.text();
+      console.log('Sheets API status:', res.status);
+      console.log('Raw response (first 200 chars):', text.substring(0, 200));
       const json = JSON.parse(text.substring(47, text.length - 2));
+      console.log('Parsed table cols:', json.table ? json.table.cols.map(c => c.label) : 'NO TABLE');
+      console.log('Row count:', json.table ? json.table.rows.length : 'NO TABLE');
       const rows = json.table.rows;
       const cols = json.table.cols.map(c => c.label.toLowerCase().trim());
       allEvents = rows
