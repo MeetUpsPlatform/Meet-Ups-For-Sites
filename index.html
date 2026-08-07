@@ -393,6 +393,7 @@
           ${btnLink&&btnLink!=='#'
             ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText}">${btnText}</a>`
             :`<button class="btn btn-secondary" disabled>${btnText}</button>`}
+          <button class="btn btn-easy-read" onclick="event.stopPropagation();openEasyReadDirect(${idx})" aria-label="Easy Read version of ${name}">📖 Easy Read version</button>
           <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this,\`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
         </div>
       </article>`;
@@ -454,6 +455,12 @@
     modal.style.display='flex'; document.body.style.overflow='hidden'; modal.scrollTop=0;
     try{window.top.scrollTo({top:0,behavior:'smooth'});}catch(e){}
     window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ── EASY READ FROM CARD (no modal needed) ──
+  function openEasyReadDirect(idx) {
+    currentModalEvent = allEvents[idx];
+    openEasyRead();
   }
 
   // ── EASY READ GENERATOR ──
