@@ -293,7 +293,7 @@
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&t=${Date.now()}`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
     try {
       const res = await fetch(url);
@@ -308,22 +308,22 @@
 
       // Map raw header to standard name by looking for key words
       function normaliseCol(raw) {
-        if (raw.startsWith('event name'))          return 'event name';
-        if (raw.startsWith('date'))                return 'date';
-        if (raw.startsWith('time'))                return 'time';
-        if (raw.startsWith('location'))            return 'location';
-        if (raw.startsWith('description'))         return 'description';
-        if (raw.startsWith('tags'))                return 'tags';
-        if (raw.startsWith('button text'))         return 'button text';
-        if (raw.startsWith('button link'))         return 'button link';
-        if (raw.startsWith('image url'))           return 'image url';
-        if (raw.startsWith('status'))              return 'status';
-        if (raw.startsWith('accessibility notes')) return 'accessibility notes';
-        if (raw.startsWith('sensory info'))        return 'sensory info';
-        if (raw.startsWith('transport info'))      return 'transport info';
-        if (raw.startsWith('cost'))                return 'cost';
-        if (raw.startsWith('booking required'))    return 'booking required';
-        if (raw.startsWith('contact'))             return 'contact';
+        if (raw.includes('event name'))          return 'event name';
+        if (raw.includes('image url') || raw.includes('image_url')) return 'image url';
+        if (raw.includes('button text'))         return 'button text';
+        if (raw.includes('button link'))         return 'button link';
+        if (raw.includes('accessibility'))       return 'accessibility notes';
+        if (raw.includes('sensory'))             return 'sensory info';
+        if (raw.includes('transport'))           return 'transport info';
+        if (raw.includes('booking'))             return 'booking required';
+        if (raw.includes('description'))         return 'description';
+        if (raw.includes('location'))            return 'location';
+        if (raw.includes('contact'))             return 'contact';
+        if (raw.includes('status'))              return 'status';
+        if (raw.includes('tags'))                return 'tags';
+        if (raw.includes('cost'))                return 'cost';
+        if (raw.includes('time'))                return 'time';
+        if (raw.includes('date'))                return 'date';
         return raw;
       }
 
