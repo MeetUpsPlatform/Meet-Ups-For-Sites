@@ -303,39 +303,19 @@
       const json = JSON.parse(text.slice(start, end + 1));
       if (!json.table || !json.table.rows) throw new Error('No data');
       // Read column headers and normalise them
-      const rawCols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
       const rows = json.table.rows;
-
-      // Map raw header to standard name by looking for key words
-      function normaliseCol(raw) {
-        if (raw.includes('event name'))          return 'event name';
-        if (raw.includes('image url') || raw.includes('image_url')) return 'image url';
-        if (raw.includes('button text'))         return 'button text';
-        if (raw.includes('button link'))         return 'button link';
-        if (raw.includes('accessibility'))       return 'accessibility notes';
-        if (raw.includes('sensory'))             return 'sensory info';
-        if (raw.includes('transport'))           return 'transport info';
-        if (raw.includes('booking'))             return 'booking required';
-        if (raw.includes('description'))         return 'description';
-        if (raw.includes('location'))            return 'location';
-        if (raw.includes('contact'))             return 'contact';
-        if (raw.includes('status'))              return 'status';
-        if (raw.includes('tags'))                return 'tags';
-        if (raw.includes('cost'))                return 'cost';
-        if (raw.includes('time'))                return 'time';
-        if (raw.includes('date'))                return 'date';
-        return raw;
-      }
-
-      const cols = rawCols.map(normaliseCol);
-
+      // Read by fixed position — columns A-P (0-15)
+      const COLS = [
+        'event name','date','time','location','description','tags',
+        'button text','button link','image url','status',
+        'accessibility notes','sensory info','transport info','cost',
+        'booking required','contact'
+      ];
       allEvents = rows.map(row => {
         const obj = {};
-        cols.forEach((col, i) => {
+        COLS.forEach((col, i) => {
           const cell = row.c ? row.c[i] : null;
-          const val = cell ? String(cell.f || cell.v || '').trim() : '';
-          // Only set if not already set (first match wins)
-          if (!obj[col]) obj[col] = val;
+          obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
         });
         return obj;
       }).filter(e => {
