@@ -302,25 +302,41 @@
       if (start === -1 || end === -1) throw new Error('No JSON');
       const json = JSON.parse(text.slice(start, end + 1));
       if (!json.table || !json.table.rows) throw new Error('No data');
-      // Read column headers from sheet so position changes never break anything
-      const cols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
+      // Read column headers and normalise them
+      const rawCols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
       const rows = json.table.rows;
+
+      // Map raw header to standard name by looking for key words
+      function normaliseCol(raw) {
+        if (raw.startsWith('event name'))          return 'event name';
+        if (raw.startsWith('date'))                return 'date';
+        if (raw.startsWith('time'))                return 'time';
+        if (raw.startsWith('location'))            return 'location';
+        if (raw.startsWith('description'))         return 'description';
+        if (raw.startsWith('tags'))                return 'tags';
+        if (raw.startsWith('button text'))         return 'button text';
+        if (raw.startsWith('button link'))         return 'button link';
+        if (raw.startsWith('image url'))           return 'image url';
+        if (raw.startsWith('status'))              return 'status';
+        if (raw.startsWith('accessibility notes')) return 'accessibility notes';
+        if (raw.startsWith('sensory info'))        return 'sensory info';
+        if (raw.startsWith('transport info'))      return 'transport info';
+        if (raw.startsWith('cost'))                return 'cost';
+        if (raw.startsWith('booking required'))    return 'booking required';
+        if (raw.startsWith('contact'))             return 'contact';
+        return raw;
+      }
+
+      const cols = rawCols.map(normaliseCol);
+
       allEvents = rows.map(row => {
         const obj = {};
         cols.forEach((col, i) => {
           const cell = row.c ? row.c[i] : null;
-          obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
+          const val = cell ? String(cell.f || cell.v || '').trim() : '';
+          // Only set if not already set (first match wins)
+          if (!obj[col]) obj[col] = val;
         });
-        // Map any variation of column names to our standard names
-        obj['event name']           = obj['event name'] || '';
-        obj['date']                 = obj['date'] || obj['date  (****double click for calandar to come up****)'] || '';
-        obj['image url']            = obj['image url'] || obj['image url (right click on any image and copy image address)'] || '';
-        obj['accessibility notes']  = obj['accessibility notes'] || '';
-        obj['sensory info']         = obj['sensory info'] || '';
-        obj['transport info']       = obj['transport info'] || '';
-        obj['booking required']     = obj['booking required'] || '';
-        obj['button text']          = obj['button text'] || '';
-        obj['button link']          = obj['button link'] || '';
         return obj;
       }).filter(e => {
         const n = (e['event name']||'').trim();
