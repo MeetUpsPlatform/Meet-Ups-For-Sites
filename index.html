@@ -294,7 +294,7 @@
 
   async function loadEvents() {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&t=${Date.now()}`;
-    const COLS = ['event name','date','time','location','description','tags','button text','button link','image url','status','accessibility notes','sensory info','transport info','cost','booking required','contact'];
+
     try {
       const res = await fetch(url);
       const text = await res.text();
@@ -302,12 +302,30 @@
       if (start === -1 || end === -1) throw new Error('No JSON');
       const json = JSON.parse(text.slice(start, end + 1));
       if (!json.table || !json.table.rows) throw new Error('No data');
+      // Read column headers from sheet so position changes never break anything
+      const cols = json.table.cols.map(c => (c.label || '').toLowerCase().trim());
       const rows = json.table.rows;
       allEvents = rows.map(row => {
         const obj = {};
-        COLS.forEach((col, i) => { const cell = row.c ? row.c[i] : null; obj[col] = cell ? String(cell.f || cell.v || '').trim() : ''; });
+        cols.forEach((col, i) => {
+          const cell = row.c ? row.c[i] : null;
+          obj[col] = cell ? String(cell.f || cell.v || '').trim() : '';
+        });
+        // Map any variation of column names to our standard names
+        obj['event name']           = obj['event name'] || '';
+        obj['date']                 = obj['date'] || obj['date  (****double click for calandar to come up****)'] || '';
+        obj['image url']            = obj['image url'] || obj['image url (right click on any image and copy image address)'] || '';
+        obj['accessibility notes']  = obj['accessibility notes'] || '';
+        obj['sensory info']         = obj['sensory info'] || '';
+        obj['transport info']       = obj['transport info'] || '';
+        obj['booking required']     = obj['booking required'] || '';
+        obj['button text']          = obj['button text'] || '';
+        obj['button link']          = obj['button link'] || '';
         return obj;
-      }).filter(e => { const n = (e['event name']||'').trim(); return n.length > 1 && n.toLowerCase() !== 'event name'; });
+      }).filter(e => {
+        const n = (e['event name']||'').trim();
+        return n.length > 1 && n.toLowerCase() !== 'event name';
+      });
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
     } catch(err) {
