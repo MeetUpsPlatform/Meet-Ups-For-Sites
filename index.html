@@ -322,6 +322,14 @@
         const n = (e['event name']||'').trim();
         return n.length > 1 && n.toLowerCase() !== 'event name';
       });
+      // Filter out past events (only hide if date has a year in it)
+      const today = new Date(); today.setHours(0,0,0,0);
+      allEvents = allEvents.filter(e => {
+        const hasYear = /\b\d{4}\b/.test(e['date'] || '');
+        if (!hasYear) return true; // No year = keep it (TBC etc)
+        return parseDate(e['date']) >= today;
+      });
+
       allEvents.sort((a, b) => parseDate(a['date']) - parseDate(b['date']));
       renderEvents();
     } catch(err) {
