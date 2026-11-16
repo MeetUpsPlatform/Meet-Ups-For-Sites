@@ -293,7 +293,7 @@
   }
 
   async function loadEvents() {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&headers=1&range=A:P`;
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&headers=1&range=A:U`;
 
     try {
       const res = await fetch(url);
@@ -304,12 +304,13 @@
       if (!json.table || !json.table.rows) throw new Error('No data');
       // Read column headers and normalise them
       const rows = json.table.rows;
-      // Read by fixed position — columns A-P (0-15)
+      // Read by fixed position — columns A-U (0-20)
       const COLS = [
-        'event name','date','time','location','description','tags',
-        'button text','button link','image url','status',
+        'event name','date','time','location','description',
+        'button text','button link','image url',
         'accessibility notes','sensory info','transport info','cost',
-        'booking required','contact'
+        'booking required','contact name','contact email','contact phone',
+        'area','full description','calendar id','needs checklist','checklist tab'
       ];
       allEvents = rows.map(row => {
         const obj = {};
@@ -359,7 +360,7 @@
     if (currentFilter !== 'all') {
       filtered = allEvents.filter(e =>
         (e['location']||'').toLowerCase().includes(currentFilter.toLowerCase()) ||
-        (e['tags']||'').toLowerCase().includes(currentFilter.toLowerCase())
+        (e['area']||'').toLowerCase().includes(currentFilter.toLowerCase())
       );
     }
     const filterLabel = currentFilter !== 'all' ? ` in <strong>${currentFilter}</strong>` : '';
@@ -373,20 +374,17 @@
 
   function buildCard(e, idx, i) {
     const name=(e['event name']||'').toString(); const date=(e['date']||'').toString(); const time=(e['time']||'').toString();
-    const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const tags=(e['tags']||'').toString();
-    const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'#').toString();
-    const imageUrl=(e['image url']||'').toString(); const status=(e['status']||'').toString().trim();
+    const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const area=(e['area']||'').toString();
+    const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'').toString();
+    const imageUrl=(e['image url']||'').toString();
     const accessNotes=(e['accessibility notes']||'').toString(); const sensory=(e['sensory info']||'').toString();
     const transport=(e['transport info']||'').toString(); const cost=(e['cost']||'').toString();
-    const booking=(e['booking required']||'').toString(); const contact=(e['contact']||'').toString();
-    const colours=getLocColours(location,tags); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
+    const booking=(e['booking required']||'').toString(); const contact=(e['contact name']||'').toString();
+    const colours=getLocColours(location,area); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
     const imgHtml = imageUrl
       ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.outerHTML='<div class=card-img-placeholder style=background:${colours.bg}>${locEmoji}</div>'">`
       : `<div class="card-img-placeholder" style="background:${colours.bg}">${locEmoji}</div>`;
     const locTag = location ? `<span class="tag" style="background:${colours.bg};color:#222">${location}</span>` : '';
-    const extraTags = tags ? tags.split(',').map(t=>`<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`).join('') : '';
-    const statusKey=status.toLowerCase().replace(/\s+/g,'-');
-    const statusTag=status?`<span class="tag status-${statusKey}">${status}</span>`:'';
     const costTag=cost?`<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>`:'';
     const accessRows=[
       accessNotes?`<div class="card-access-row"><span>♿</span><span>${accessNotes}</span></div>`:'',
@@ -405,7 +403,7 @@
         <span class="card-band" style="background:${colours.band}"></span>
         ${imgHtml}
         <div class="card-body">
-          <div class="tags">${locTag}${extraTags}${statusTag}${costTag}</div>
+          <div class="tags">${locTag}${costTag}</div>
           <h2 class="card-title">${name}</h2>
           ${description?`<p class="card-desc">${description}</p>`:''}
           ${accessBlock}
@@ -425,13 +423,13 @@
     const e = allEvents[idx]; if (!e) return;
     currentModalEvent = e;
     const name=(e['event name']||'').toString(); const date=(e['date']||'').toString(); const time=(e['time']||'').toString();
-    const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const tags=(e['tags']||'').toString();
+    const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const area=(e['area']||'').toString();
     const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'').toString();
-    const imageUrl=(e['image url']||'').toString(); const status=(e['status']||'').toString().trim();
+    const imageUrl=(e['image url']||'').toString();
     const accessNotes=(e['accessibility notes']||'').toString(); const sensory=(e['sensory info']||'').toString();
     const transport=(e['transport info']||'').toString(); const cost=(e['cost']||'').toString();
-    const booking=(e['booking required']||'').toString(); const contact=(e['contact']||'').toString();
-    const colours=getLocColours(location,tags); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
+    const booking=(e['booking required']||'').toString(); const contact=(e['contact name']||'').toString();
+    const colours=getLocColours(location,area); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
 
     document.getElementById('modal-band').style.background=colours.band;
     document.getElementById('modal-title').textContent=name;
@@ -447,8 +445,6 @@
     } else { imgWrap.innerHTML=`<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:6rem;background:${colours.bg}">${locEmoji}</div>`; }
 
     let tagsHtml=location?`<span class="tag" style="background:${colours.bg};color:#222">${location}</span>`:'';
-    if(tags) tagsHtml+=tags.split(',').map(t=>`<span class="tag" style="background:var(--bg3);color:var(--text);border:1px solid var(--border)">${t.trim()}</span>`).join('');
-    if(status){const sk=status.toLowerCase().replace(/\s+/g,'-');tagsHtml+=`<span class="tag status-${sk}">${status}</span>`;}
     if(cost) tagsHtml+=`<span class="tag" style="background:#c8e040;color:#222">💰 ${cost}</span>`;
     document.getElementById('modal-tags').innerHTML=tagsHtml;
 
@@ -501,7 +497,7 @@
     const transport=(e['transport info']||'').toString();
     const cost=(e['cost']||'').toString();
     const booking=(e['booking required']||'').toString();
-    const contact=(e['contact']||'').toString();
+    const contact=(e['contact name']||'').toString();
     const imageUrl=(e['image url']||'').toString();
 
     const html = `<!DOCTYPE html>
