@@ -375,11 +375,13 @@
   function buildCard(e, idx, i) {
     const name=(e['event name']||'').toString(); const date=(e['date']||'').toString(); const time=(e['time']||'').toString();
     const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const area=(e['area']||'').toString();
-    const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'').toString();
+    const btnText=(e['button text']||'').toString(); const btnLink=(e['button link']||'').toString();
+    const calendarId=(e['calendar id']||'').toString();
     const imageUrl=(e['image url']||'').toString();
     const accessNotes=(e['accessibility notes']||'').toString(); const sensory=(e['sensory info']||'').toString();
     const transport=(e['transport info']||'').toString(); const cost=(e['cost']||'').toString();
     const booking=(e['booking required']||'').toString(); const contact=(e['contact name']||'').toString();
+    const contactEmail=(e['contact email']||'').toString(); const contactPhone=(e['contact phone']||'').toString();
     const colours=getLocColours(location,area); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
     const imgHtml = imageUrl
       ? `<img class="card-img" src="${imageUrl}" alt="${name}" loading="lazy" onerror="this.outerHTML='<div class=card-img-placeholder style=background:${colours.bg}>${locEmoji}</div>'">`
@@ -391,7 +393,7 @@
       sensory?`<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>`:'',
       transport?`<div class="card-access-row"><span>🚌</span><span>${transport}</span></div>`:'',
       booking==='Yes'?`<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>`:'',
-      contact?`<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>`:'',
+      contact?`<div class="card-access-row"><span>💬</span><span>Contact: ${contact}${contactEmail?` &bull; <a href="mailto:${contactEmail}" style="color:var(--sage-light)">${contactEmail}</a>`:''}${contactPhone?` &bull; ${contactPhone}`:''}</span></div>`:'',
     ].filter(Boolean).join('');
     const accessBlock=accessRows?`<div class="card-access"><p class="card-access-heading">Accessibility &amp; Info</p>${accessRows}</div>`:'';
     const metaItems=[date?`<span class="card-meta-item"><span>📅</span><span>${date}</span></span>`:'',time?`<span class="card-meta-item"><span>🕐</span><span>${time}</span></span>`:''].filter(Boolean).join('');
@@ -411,8 +413,10 @@
         </div>
         <div class="card-footer">
           ${btnLink&&btnLink!=='#'
-            ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText}">${btnText}</a>`
-            :`<button class="btn btn-secondary" disabled>${btnText}</button>`}
+            ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText||'Register Interest'}">${btnText||'Register Interest'}</a>`
+            : calendarId
+              ?`<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+              :''}
           <button class="btn btn-easy-read" onclick="event.stopPropagation();openEasyReadDirect(${idx})" aria-label="Easy Read version of ${name}">📖 Easy Read version</button>
           <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this,\`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
         </div>
@@ -424,11 +428,13 @@
     currentModalEvent = e;
     const name=(e['event name']||'').toString(); const date=(e['date']||'').toString(); const time=(e['time']||'').toString();
     const location=(e['location']||'').toString(); const description=(e['description']||'').toString(); const area=(e['area']||'').toString();
-    const btnText=(e['button text']||'Find Out More').toString(); const btnLink=(e['button link']||'').toString();
+    const btnText=(e['button text']||'').toString(); const btnLink=(e['button link']||'').toString();
+    const calendarId=(e['calendar id']||'').toString();
     const imageUrl=(e['image url']||'').toString();
     const accessNotes=(e['accessibility notes']||'').toString(); const sensory=(e['sensory info']||'').toString();
     const transport=(e['transport info']||'').toString(); const cost=(e['cost']||'').toString();
     const booking=(e['booking required']||'').toString(); const contact=(e['contact name']||'').toString();
+    const contactEmail=(e['contact email']||'').toString(); const contactPhone=(e['contact phone']||'').toString();
     const colours=getLocColours(location,area); const locKey=location.toLowerCase(); const locEmoji=locationEmojis[locKey]||'📍';
 
     document.getElementById('modal-band').style.background=colours.band;
@@ -453,7 +459,7 @@
       sensory?`<div class="card-access-row"><span>🔊</span><span>${sensory}</span></div>`:'',
       transport?`<div class="card-access-row"><span>🚌</span><span>${transport}</span></div>`:'',
       booking==='Yes'?`<div class="card-access-row"><span>🎟️</span><span>Booking required</span></div>`:'',
-      contact?`<div class="card-access-row"><span>💬</span><span>Contact: ${contact}</span></div>`:'',
+      contact?`<div class="card-access-row"><span>💬</span><span>Contact: ${contact}${contactEmail?` &bull; <a href="mailto:${contactEmail}" style="color:var(--sage-light)">${contactEmail}</a>`:''}${contactPhone?` &bull; ${contactPhone}`:''}</span></div>`:'',
     ].filter(Boolean).join('');
     const accessEl=document.getElementById('modal-access');
     document.getElementById('modal-access-rows').innerHTML=accessRows;
@@ -464,8 +470,10 @@
     metaEl.innerHTML=metaItems; metaEl.style.display=metaItems?'':'none';
 
     document.getElementById('modal-btn').innerHTML=btnLink
-      ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText}</a>`
-      :`<button class="btn btn-secondary" disabled>${btnText}</button>`;
+      ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText||'Register Interest'}</a>`
+      : calendarId
+        ?`<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+        :'';
 
     modalListenText=[name,date?`Date: ${date}.`:'',time?`Time: ${time}.`:'',location?`Location: ${location}.`:'',description,accessNotes?`Accessibility: ${accessNotes}.`:'',transport?`Transport: ${transport}.`:'',booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ');
     document.getElementById('modal-listen-btn').classList.remove('speaking');
@@ -490,14 +498,17 @@
     const time=(e['time']||'').toString();
     const location=(e['location']||'').toString();
     const description=(e['description']||'').toString();
-    const btnText=(e['button text']||'Book a Place').toString();
+    const btnText=(e['button text']||'').toString();
     const btnLink=(e['button link']||'').toString();
+    const calendarId=(e['calendar id']||'').toString();
     const accessNotes=(e['accessibility notes']||'').toString();
     const sensory=(e['sensory info']||'').toString();
     const transport=(e['transport info']||'').toString();
     const cost=(e['cost']||'').toString();
     const booking=(e['booking required']||'').toString();
     const contact=(e['contact name']||'').toString();
+    const contactEmail=(e['contact email']||'').toString();
+    const contactPhone=(e['contact phone']||'').toString();
     const imageUrl=(e['image url']||'').toString();
 
     const html = `<!DOCTYPE html>
@@ -607,12 +618,18 @@
   ${contact ? `
   <section>
     <h2>💬 Need help or have questions?</h2>
-    <div class="row"><div class="icon">📧</div><div class="text"><strong>Contact us:</strong>${contact}</div></div>
+    <div class="row"><div class="icon">👤</div><div class="text"><strong>Contact:</strong>${contact}</div></div>
+    ${contactEmail ? `<div class="row"><div class="icon">📧</div><div class="text"><strong>Email:</strong><a href="mailto:${contactEmail}">${contactEmail}</a></div></div>` : ''}
+    ${contactPhone ? `<div class="row"><div class="icon">📞</div><div class="text"><strong>Phone:</strong>${contactPhone}</div></div>` : ''}
     <div class="row"><div class="icon">💚</div><div class="text">We are happy to help. Please get in touch if you need support to come to this event.</div></div>
   </section>` : ''}
 
-  <!-- BOOK BUTTON -->
-  ${btnLink ? `<a href="${btnLink}" class="book-btn" target="_blank" rel="noopener">👉 ${btnText}</a>` : ''}
+  <!-- BOOK / MORE INFO BUTTON -->
+  ${btnLink
+    ? `<a href="${btnLink}" class="book-btn" target="_blank" rel="noopener">👉 ${btnText||'Register Interest'}</a>`
+    : calendarId
+      ? `<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
+      : ''}
 
   <div class="footer-note">
     <p>Safe Soulmates CIC &bull; info@safesoulmates.org</p>
