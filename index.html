@@ -415,7 +415,7 @@
           ${btnLink&&btnLink!=='#'
             ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText||'Register Interest'}">${btnText||'Register Interest'}</a>`
             : calendarId
-              ?`<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+              ?`<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
               :''}
           <button class="btn btn-easy-read" onclick="event.stopPropagation();openEasyReadDirect(${idx})" aria-label="Easy Read version of ${name}">📖 Easy Read version</button>
           <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this,\`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
@@ -472,7 +472,7 @@
     document.getElementById('modal-btn').innerHTML=btnLink
       ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText||'Register Interest'}</a>`
       : calendarId
-        ?`<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+        ?`<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
         :'';
 
     modalListenText=[name,date?`Date: ${date}.`:'',time?`Time: ${time}.`:'',location?`Location: ${location}.`:'',description,accessNotes?`Accessibility: ${accessNotes}.`:'',transport?`Transport: ${transport}.`:'',booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ');
@@ -628,7 +628,7 @@
   ${btnLink
     ? `<a href="${btnLink}" class="book-btn" target="_blank" rel="noopener">👉 ${btnText||'Register Interest'}</a>`
     : calendarId
-      ? `<a href="https://www.google.com/calendar/event?eid=${encodeURIComponent(calendarId)}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
+      ? `<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
       : ''}
 
   <div class="footer-note">
