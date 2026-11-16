@@ -292,6 +292,27 @@
     return { band: '#555e56', bg: '#CDD2CC' };
   }
 
+  // Calendar IDs by area — used to build direct event links
+  const CALENDAR_IDS = {
+    'Cambridge':      '7107c3b5bd9cace0fcb54a0a811d8b3cf51128e865999637b435b3ea444a4ebb@group.calendar.google.com',
+    'Day Out':        'd77ed4247779c07d31e610064ed33ac60e2814bdf00d403fb36fd55a0bee5b3e@group.calendar.google.com',
+    'Day Trips':      'd77ed4247779c07d31e610064ed33ac60e2814bdf00d403fb36fd55a0bee5b3e@group.calendar.google.com',
+    'Ely':            '0a7f8067be30e614fb4aefe9f0bfd0b51be0a58bdc42ac064e8eb55a846bf4fb@group.calendar.google.com',
+    'Huntingdon':     'fa5d054e851f6cafca9ff807a258878a1a203043a27e0272370dbbacf3785b1c@group.calendar.google.com',
+    'March':          '21572c724706bf18505d20fbf7712b430339facaffcfa79b2995af1abd9fc62f@group.calendar.google.com',
+    'Oliver McGowan': '5020719ca307bd80735d41d2cf9d2bf239cb22789e38dac1b1c0b9cce0814eee@group.calendar.google.com',
+    'Online':         'e792dc942747c5726ee175b3f57ce054b97c92aa1f2fbc6b18e02e4f8a2f413d@group.calendar.google.com',
+    'Peterborough':   'fa0db82ce679af708e9622b0404ad67872ddea0439d0accd87b6155f48b46765@group.calendar.google.com',
+    'St Ives':        'a0ebb4a06b74cff32cf0f16f0fcdd4de0dbac54bfd4ce860f6b899b773e59af5@group.calendar.google.com',
+    'St Neots':       '4bf60f311a9b682dd4040813ae165d928dc16b1d4f71cc8d2fea8ff8521637a0@group.calendar.google.com'
+  };
+  function calEventLink(eventId, area) {
+    const calId = CALENDAR_IDS[area] || CALENDAR_IDS['Cambridge'];
+    // Google Calendar public event link = base64(eventId + ' ' + calendarId)
+    try { return 'https://www.google.com/calendar/event?eid=' + btoa(eventId + ' ' + calId); }
+    catch(e) { return null; }
+  }
+
   async function loadEvents() {
     const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}&headers=1&range=A:U`;
 
@@ -415,8 +436,8 @@
           ${btnLink&&btnLink!=='#'
             ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText||'Register Interest'}">${btnText||'Register Interest'}</a>`
             : calendarId
-              ?`<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
-              :''}
+              ?`<a href="${calendarId}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+              :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
           <button class="btn btn-easy-read" onclick="event.stopPropagation();openEasyReadDirect(${idx})" aria-label="Easy Read version of ${name}">📖 Easy Read version</button>
           <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this,\`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
         </div>
@@ -472,8 +493,8 @@
     document.getElementById('modal-btn').innerHTML=btnLink
       ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText||'Register Interest'}</a>`
       : calendarId
-        ?`<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
-        :'';
+        ?`<a href="${calendarId}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
+        :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`;
 
     modalListenText=[name,date?`Date: ${date}.`:'',time?`Time: ${time}.`:'',location?`Location: ${location}.`:'',description,accessNotes?`Accessibility: ${accessNotes}.`:'',transport?`Transport: ${transport}.`:'',booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ');
     document.getElementById('modal-listen-btn').classList.remove('speaking');
@@ -628,8 +649,8 @@
   ${btnLink
     ? `<a href="${btnLink}" class="book-btn" target="_blank" rel="noopener">👉 ${btnText||'Register Interest'}</a>`
     : calendarId
-      ? `<a href="https://calendar.google.com/calendar/event?eid=${btoa(calendarId)}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
-      : ''}
+      ? `<a href="${calendarId}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
+      : `<div class="book-btn" style="background:#40a02b;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
 
   <div class="footer-note">
     <p>Safe Soulmates CIC &bull; info@safesoulmates.org</p>
