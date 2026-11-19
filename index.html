@@ -435,9 +435,7 @@
         <div class="card-footer">
           ${btnLink&&btnLink!=='#'
             ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener" aria-label="${btnText||'Register Interest'}">${btnText||'Register Interest'}</a>`
-            : calendarId
-              ?`<a href="${calendarId}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
-              :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
+            :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
           <button class="btn btn-easy-read" onclick="event.stopPropagation();openEasyReadDirect(${idx})" aria-label="Easy Read version of ${name}">📖 Easy Read version</button>
           <button class="btn-listen" id="listen-${i}" onclick="event.stopPropagation();speakEvent(this,\`${listenText}\`)" aria-label="Listen to details for ${name}">🔊 Listen to this event</button>
         </div>
@@ -492,9 +490,7 @@
 
     document.getElementById('modal-btn').innerHTML=btnLink
       ?`<a href="${btnLink}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">${btnText||'Register Interest'}</a>`
-      : calendarId
-        ?`<a href="${calendarId}" class="btn" style="background:${colours.band};color:#fff" target="_blank" rel="noopener">📅 More Information</a>`
-        :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`;
+      :`<div class="btn" style="background:#40a02b;color:#fff;cursor:default">✅ Just Turn Up — No Need to Book!</div>`;
 
     modalListenText=[name,date?`Date: ${date}.`:'',time?`Time: ${time}.`:'',location?`Location: ${location}.`:'',description,accessNotes?`Accessibility: ${accessNotes}.`:'',transport?`Transport: ${transport}.`:'',booking==='Yes'?'Booking is required.':''].filter(Boolean).join(' ');
     document.getElementById('modal-listen-btn').classList.remove('speaking');
@@ -648,9 +644,7 @@
   <!-- BOOK / MORE INFO BUTTON -->
   ${btnLink
     ? `<a href="${btnLink}" class="book-btn" target="_blank" rel="noopener">👉 ${btnText||'Register Interest'}</a>`
-    : calendarId
-      ? `<a href="${calendarId}" class="book-btn" target="_blank" rel="noopener">📅 More Information</a>`
-      : `<div class="book-btn" style="background:#40a02b;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
+    : `<div class="book-btn" style="background:#40a02b;cursor:default">✅ Just Turn Up — No Need to Book!</div>`}
 
   <div class="footer-note">
     <p>Safe Soulmates CIC &bull; info@safesoulmates.org</p>
